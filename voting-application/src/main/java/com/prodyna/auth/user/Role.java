@@ -1,4 +1,4 @@
-package com.prodyna.auth;
+package com.prodyna.auth.user;
 
 public enum Role {
 

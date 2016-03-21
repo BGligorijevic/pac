@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,7 @@ import com.prodyna.auth.user.User;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({ "server.port=0" })
-public class VotingIT {
+public class UserIT {
 
     @Value("${local.server.port}")
     private int port;
@@ -41,12 +39,13 @@ public class VotingIT {
 
     @Before
     public void setUp() throws Exception {
-	URL baseUrl = new URL("http://localhost:" + port + "/api/votes");
+	URL baseUrl = new URL("http://localhost:" + port + "/user");
 	base = baseUrl.toString();
 	template = new TestRestTemplate();
     }
 
-    private String login() {
+    @Test
+    public void login_succeeds() throws Exception {
 	User user = new User();
 	user.setUserName("Tom");
 	user.setPassword("Jones");
@@ -55,31 +54,23 @@ public class VotingIT {
 	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	HttpEntity<User> entity = new HttpEntity<User>(user);
 
-	ResponseEntity<LoginResponse> response = template.postForEntity("http://localhost:" + port + "/user/login",
-		entity, LoginResponse.class);
+	ResponseEntity<LoginResponse> response = template.postForEntity(base + "/login", entity, LoginResponse.class);
 	assertTrue(response != null);
-
-	return response.getBody().getToken();
+	assertTrue(!response.getBody().getToken().isEmpty());
     }
 
     @Test
-    public void gets_all_votes() throws Exception {
-	String token = login();
+    public void login_fails() throws Exception {
+	User user = new User();
+	user.setUserName("Mike");
+	user.setPassword("Douglas");
 
 	HttpHeaders headers = new HttpHeaders();
-	headers.set("Authorization", "Bearer " + token);
+	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	HttpEntity<User> entity = new HttpEntity<User>(user);
 
-	HttpEntity<?> entity = new HttpEntity<>(headers);
-
-	ResponseEntity<Vote[]> response = template.exchange(base, HttpMethod.GET, entity, Vote[].class);
-	List<Vote> votes = Arrays.asList(response.getBody());
-	assertTrue(!votes.isEmpty());
-	assertTrue(votes.size() == 1);
-    }
-
-    @Test
-    public void get_all_votes_fails_without_token() throws Exception {
-	ResponseEntity<String> response = template.getForEntity(base, String.class);
-	assertTrue(response.getStatusCode() == HttpStatus.FORBIDDEN);
+	ResponseEntity<LoginResponse> response = template.postForEntity(base + "/login", entity, LoginResponse.class);
+	assertTrue(response != null);
+	assertTrue(response.getStatusCode() == HttpStatus.UNAUTHORIZED);
     }
 }

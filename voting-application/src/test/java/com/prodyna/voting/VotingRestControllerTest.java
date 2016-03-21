@@ -21,8 +21,11 @@ public class VotingRestControllerTest {
     @Mock
     private VotingService votingService;
 
+    /**
+     * Test for {@link VotingRestController#getAllVotes()}.
+     */
     @Test
-    public void getsAllVotes() {
+    public void gets_all_votes() {
 	List<Vote> votes = new ArrayList<>();
 	Vote vote1 = new Vote();
 	vote1.setTitle("vote1 title");

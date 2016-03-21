@@ -3,7 +3,7 @@ package com.prodyna.voting;
 import java.util.Date;
 import java.util.List;
 
-import com.prodyna.auth.User;
+import com.prodyna.auth.user.User;
 
 import lombok.Getter;
 import lombok.Setter;

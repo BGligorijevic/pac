@@ -18,6 +18,12 @@ import io.jsonwebtoken.SignatureException;
 
 public class JwtFilter extends GenericFilterBean {
 
+    private final String secretKey;
+
+    public JwtFilter(final String secretKey) {
+	this.secretKey = secretKey;
+    }
+
     @Override
     public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 	    throws IOException, ServletException {
@@ -35,7 +41,7 @@ public class JwtFilter extends GenericFilterBean {
 	final String token = authHeader.substring(7);
 
 	try {
-	    final Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
+	    final Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 	    request.setAttribute("claims", claims);
 	} catch (final SignatureException e) {
 	    response.sendError(HttpStatus.FORBIDDEN.value());
