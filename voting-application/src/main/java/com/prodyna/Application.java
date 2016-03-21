@@ -10,16 +10,16 @@ import com.prodyna.auth.JwtFilter;
 @SpringBootApplication
 public class Application {
 
-	public static void main(final String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(final String[] args) {
+	SpringApplication.run(Application.class, args);
+    }
 
-	@Bean
-	public FilterRegistrationBean jwtFilter() {
-		final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-		registrationBean.setFilter(new JwtFilter());
-		registrationBean.addUrlPatterns("/api/*");
+    @Bean
+    public FilterRegistrationBean jwtFilter() {
+	final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+	registrationBean.setFilter(new JwtFilter());
+	registrationBean.addUrlPatterns("/api/*");
 
-		return registrationBean;
-	}
+	return registrationBean;
+    }
 }

@@ -7,12 +7,12 @@ import java.util.List;
  */
 public interface VotingService {
 
-	/**
-	 * Returns all votes.
-	 * 
-	 * @param user
-	 * @return
-	 */
-	List<Vote> getAllVotes();
+    /**
+     * Returns all votes.
+     *
+     * @param user
+     * @return
+     */
+    List<Vote> getAllVotes();
 
 }

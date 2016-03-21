@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class VotingServiceImpl implements VotingService {
 
-	@Override
-	public List<Vote> getAllVotes() {
-		List<Vote> votes = new ArrayList<>();
-		Vote vote = new Vote();
-		vote.setTitle("Test title");
-		vote.setDescription("Test description");
-		votes.add(vote);
-		
-		return votes;
-	}
+    @Override
+    public List<Vote> getAllVotes() {
+	List<Vote> votes = new ArrayList<>();
+	Vote vote = new Vote();
+	vote.setTitle("Test title");
+	vote.setDescription("Test description");
+	votes.add(vote);
+
+	return votes;
+    }
 }

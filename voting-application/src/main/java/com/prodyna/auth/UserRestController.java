@@ -25,20 +25,24 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class UserRestController {
 
-	private final Map<String, List<String>> userDb = new HashMap<>();
+    private final Map<String, List<String>> userDb = new HashMap<>();
 
-	public UserRestController() {
-		userDb.put("tom", Arrays.asList("user"));
-		userDb.put("sally", Arrays.asList("user", "admin"));
+    public UserRestController() {
+	userDb.put("tom", Arrays.asList("user"));
+	userDb.put("sally", Arrays.asList("user", "admin"));
+    }
+
+    @RequestMapping(value = "login", method = RequestMethod.POST)
+    public LoginResponse login(@RequestBody final User user) throws ServletException {
+	if (user.getUserName() == null || !userDb.containsKey(user.getUserName())) {
+	    throw new ServletException("Invalid login");
 	}
 
-	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public LoginResponse login(@RequestBody final User user) throws ServletException {
-		if (user.getUserName() == null || !userDb.containsKey(user.getUserName())) {
-			throw new ServletException("Invalid login");
-		}
-		return new LoginResponse(
-				Jwts.builder().setSubject(user.getUserName()).claim("roles", userDb.get(user.getUserName()))
-						.setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretkey").compact());
-	}
+	String token = Jwts.builder().setSubject(user.getUserName()).claim("roles", userDb.get(user.getUserName()))
+		.setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretkey").compact();
+	LoginResponse response = new LoginResponse();
+	response.setToken(token);
+
+	return response;
+    }
 }

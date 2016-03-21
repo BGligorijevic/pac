@@ -12,13 +12,13 @@ import lombok.Setter;
 @Setter
 public class Vote {
 
-	private String title;
+    private String title;
 
-	private String description;
+    private String description;
 
-	private User creator;
+    private User creator;
 
-	private Date created;
+    private Date created;
 
-	private List<VoteOptions> voteOptions;
+    private List<VoteOptions> voteOptions;
 }

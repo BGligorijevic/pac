@@ -34,60 +34,59 @@ import com.prodyna.auth.User;
 @IntegrationTest({ "server.port=0" })
 public class VotingIT {
 
-	@Value("${local.server.port}")
-	private int port;
+    @Value("${local.server.port}")
+    private int port;
 
-	private String base;
-	private RestTemplate template;
+    private String base;
+    private RestTemplate template;
 
-	@Before
-	public void setUp() throws Exception {
-		URL baseUrl = new URL("http://localhost:" + port + "/api/votes");
-		base = baseUrl.toString();
-		template = new TestRestTemplate();
-	}
+    @Before
+    public void setUp() throws Exception {
+	URL baseUrl = new URL("http://localhost:" + port + "/api/votes");
+	base = baseUrl.toString();
+	template = new TestRestTemplate();
+    }
 
-	private String login() {
-		User user = new User();
-		user.setUserName("tom");
+    private String login() {
+	User user = new User();
+	user.setUserName("tom");
 
-		HttpHeaders headers = new HttpHeaders();
-	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	    HttpEntity<User> entity = new HttpEntity<User>(user);
+	HttpHeaders headers = new HttpHeaders();
+	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	HttpEntity<User> entity = new HttpEntity<User>(user);
 
-		ResponseEntity<LoginResponse> response = template.postForEntity("http://localhost:" + port + "/user/login",
-				entity, LoginResponse.class);
-		assertTrue(response != null);
+	ResponseEntity<LoginResponse> response = template.postForEntity("http://localhost:" + port + "/user/login",
+		entity, LoginResponse.class);
+	assertTrue(response != null);
 
-		return response.getBody().getToken();
-	}
+	return response.getBody().getToken();
+    }
 
-	@Test
-	public void getAllVotes() throws Exception {
-		String token = login();
+    @Test
+    public void getAllVotes() throws Exception {
+	String token = login();
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + token);
+	HttpHeaders headers = new HttpHeaders();
+	headers.set("Authorization", "Bearer " + token);
 
-		HttpEntity<?> entity = new HttpEntity<>(headers);
+	HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<Vote[]> response = template.exchange(
-				base, HttpMethod.GET, entity, Vote[].class);
-		List<Vote> votes = Arrays.asList(response.getBody());
-		assertTrue(!votes.isEmpty());
-		assertTrue(votes.size() == 1);
-	}
+	ResponseEntity<Vote[]> response = template.exchange(base, HttpMethod.GET, entity, Vote[].class);
+	List<Vote> votes = Arrays.asList(response.getBody());
+	assertTrue(!votes.isEmpty());
+	assertTrue(votes.size() == 1);
+    }
 
-	@Test
-	public void getAllVotesFailsWithoutToken() throws Exception {
-		ResponseEntity<String> response = template.getForEntity(base, String.class);
-		assertTrue(response.getStatusCode() == HttpStatus.FORBIDDEN);
-	}
+    @Test
+    public void getAllVotesFailsWithoutToken() throws Exception {
+	ResponseEntity<String> response = template.getForEntity(base, String.class);
+	assertTrue(response.getStatusCode() == HttpStatus.FORBIDDEN);
+    }
 
-	@Test
-	@Ignore
-	public void getOneVote() throws Exception {
-		ResponseEntity<Vote[]> response = template.getForEntity(base + "/1", Vote[].class);
-		assertTrue(response.getStatusCode() == HttpStatus.FORBIDDEN);
-	}
+    @Test
+    @Ignore
+    public void getOneVote() throws Exception {
+	ResponseEntity<Vote[]> response = template.getForEntity(base + "/1", Vote[].class);
+	assertTrue(response.getStatusCode() == HttpStatus.FORBIDDEN);
+    }
 }
