@@ -9,3 +9,6 @@
 
 # Vagrant
 .vagrant
+
+# Maven
+/target/
