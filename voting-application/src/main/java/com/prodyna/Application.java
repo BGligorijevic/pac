@@ -13,7 +13,7 @@ import lombok.Getter;
 @SpringBootApplication
 public class Application {
 
-    @Value("${secretKey}")
+    @Value("${voting.app.secret.key}")
     @Getter
     private String secretKey;
 
