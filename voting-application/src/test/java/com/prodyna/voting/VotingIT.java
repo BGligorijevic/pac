@@ -23,7 +23,7 @@ import com.prodyna.voting.helper.VotingTestHelper;
 public class VotingIT implements VotingApplicationIntegrationTest {
 
     @Value("${local.server.port}")
-    private int port;
+    private int tomcatPort;
     private VotingTestHelper $;
 
     @Autowired
@@ -34,7 +34,7 @@ public class VotingIT implements VotingApplicationIntegrationTest {
     @Override
     @Before
     public void setUp() throws Exception {
-	$ = new VotingTestHelper(port, votingRepository, userRepository);
+	$ = new VotingTestHelper(tomcatPort, votingRepository, userRepository);
     }
 
     @Test
