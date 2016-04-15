@@ -1,12 +1,17 @@
 # Other
 .metadata
 
-# Eclipse Core
+# Eclipse
 .project
 .classpath
 .tern-project
 .settings/
 .springBeans
+
+# Intellij
+.idea/
+*.iml
+*.iws
 
 # Vagrant
 .vagrant

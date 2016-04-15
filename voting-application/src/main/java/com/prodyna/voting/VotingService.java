@@ -10,7 +10,6 @@ public interface VotingService {
     /**
      * Returns all votes.
      *
-     * @param user
      * @return
      */
     List<Vote> getAllVotes();

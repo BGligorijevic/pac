@@ -13,6 +13,6 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public List<Vote> getAllVotes() {
-	return votingRepository.findAll();
+        return votingRepository.findAll();
     }
 }

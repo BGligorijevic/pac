@@ -18,15 +18,15 @@ public class Application {
     private String secretKey;
 
     public static void main(final String[] args) {
-	SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
     public FilterRegistrationBean jwtFilter() {
-	final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-	registrationBean.setFilter(new JwtFilter(secretKey));
-	registrationBean.addUrlPatterns("/api/*");
+        final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setFilter(new JwtFilter(secretKey));
+        registrationBean.addUrlPatterns("/api/*");
 
-	return registrationBean;
+        return registrationBean;
     }
 }

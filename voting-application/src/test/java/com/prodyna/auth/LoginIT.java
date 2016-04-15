@@ -21,7 +21,7 @@ import com.prodyna.auth.user.UserRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest({ "server.port=0" })
+@IntegrationTest({"server.port=0"})
 public class LoginIT implements VotingApplicationIntegrationTest {
 
     @Autowired
@@ -34,26 +34,26 @@ public class LoginIT implements VotingApplicationIntegrationTest {
     @Override
     @Before
     public void setUp() throws MalformedURLException {
-	$ = new LoginTestHelper(port, userRepository);
+        $ = new LoginTestHelper(port, userRepository);
     }
 
     @Test
     public void login_succeeds_for_existing_user() throws Exception {
-	$.given_some_existing_users();
-	$.when_the_correct_login_credentials_are_sent();
-	$.then_the_access_token_is_returned();
+        $.given_some_existing_users();
+        $.when_the_correct_login_credentials_are_sent();
+        $.then_the_access_token_is_returned();
     }
 
     @Test
     public void login_fails_for_non_existing_user() {
-	$.given_some_existing_users();
-	$.when_the_wrong_login_credentials_are_sent();
-	$.then_the_unauthorized_status_code_is_returned();
+        $.given_some_existing_users();
+        $.when_the_wrong_login_credentials_are_sent();
+        $.then_the_unauthorized_status_code_is_returned();
     }
 
     @Override
     @After
     public void tearDown() {
-	$.cleanup();
+        $.cleanup();
     }
 }

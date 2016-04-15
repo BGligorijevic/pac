@@ -36,30 +36,30 @@ public class LoginRestController {
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public LoginResponse login(@RequestBody final User user) {
-	if (user == null) {
-	    throw new IllegalArgumentException("Invalid login");
-	}
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid login");
+        }
 
-	Optional<User> dbUser = userService.findUserByUserNameAndPassword(user.getUserName(), user.getPassword());
+        Optional<User> dbUser = userService.findUserByUserNameAndPassword(user.getUserName(), user.getPassword());
 
-	if (!dbUser.isPresent()) {
-	    log.debug("Invalid login for user: " + user);
-	    throw new IllegalArgumentException("Invalid login");
-	}
+        if (!dbUser.isPresent()) {
+            log.debug("Invalid login for user: " + user);
+            throw new IllegalArgumentException("Invalid login");
+        }
 
-	User foundUser = dbUser.get();
+        User foundUser = dbUser.get();
 
-	String token = Jwts.builder().setSubject(foundUser.getUserName()).claim("roles", foundUser.getRoles())
-		.setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, application.getSecretKey()).compact();
-	LoginResponse response = new LoginResponse();
-	response.setToken(token);
+        String token = Jwts.builder().setSubject(foundUser.getUserName()).claim("roles", foundUser.getRoles())
+                .setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, application.getSecretKey()).compact();
+        LoginResponse response = new LoginResponse();
+        response.setToken(token);
 
-	return response;
+        return response;
     }
 
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(IllegalArgumentException.class)
     private void handleLoginFailure(final IllegalArgumentException exception) {
-	log.debug("Login failed.", exception);
+        log.debug("Login failed.", exception);
     }
 }

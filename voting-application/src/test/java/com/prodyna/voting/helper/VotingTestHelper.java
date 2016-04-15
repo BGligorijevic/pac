@@ -30,56 +30,56 @@ public class VotingTestHelper {
     ResponseEntity<Vote[]> response;
 
     public VotingTestHelper(final int port, final VotingRepository votingRepository,
-	    final UserRepository userRepository) throws MalformedURLException {
-	this.votingRepository = votingRepository;
-	URL baseUrl = new URL("http://localhost:" + port + "/api/votes");
-	base = baseUrl.toString();
-	template = new TestRestTemplate();
+                            final UserRepository userRepository) throws MalformedURLException {
+        this.votingRepository = votingRepository;
+        URL baseUrl = new URL("http://localhost:" + port + "/api/votes");
+        base = baseUrl.toString();
+        template = new TestRestTemplate();
 
-	loginHelper = new LoginTestHelper(port, userRepository);
+        loginHelper = new LoginTestHelper(port, userRepository);
     }
 
     public void given_a_logged_in_user_with_token() {
-	loginHelper.given_some_existing_users();
-	loginHelper.when_the_correct_login_credentials_are_sent();
-	token = loginHelper.then_the_access_token_is_returned();
+        loginHelper.given_some_existing_users();
+        loginHelper.when_the_correct_login_credentials_are_sent();
+        token = loginHelper.then_the_access_token_is_returned();
     }
 
     public void given_an_n_existing_number_of_votes(final int votes) {
-	for (int i = 0; i < votes; i++) {
-	    Vote vote = new Vote();
-	    vote.setTitle("Choose your favourite operating system - voting: " + i);
-	    vote.setDescription("It cannot possibly be Windows, right?");
-	    vote.setCreated(new Date());
+        for (int i = 0; i < votes; i++) {
+            Vote vote = new Vote();
+            vote.setTitle("Choose your favourite operating system - voting: " + i);
+            vote.setDescription("It cannot possibly be Windows, right?");
+            vote.setCreated(new Date());
 
-	    votingRepository.save(vote);
-	}
+            votingRepository.save(vote);
+        }
     }
 
     public void when_get_all_votes_request_is_sent() {
-	HttpHeaders headers = new HttpHeaders();
-	headers.set("Authorization", "Bearer " + token);
-	HttpEntity<?> entity = new HttpEntity<>(headers);
-	response = template.exchange(base, HttpMethod.GET, entity, Vote[].class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        response = template.exchange(base, HttpMethod.GET, entity, Vote[].class);
     }
 
     public void then_exactly_n_votes_are_returned(final int n) {
-	List<Vote> votes = Arrays.asList(response.getBody());
-	assertTrue(!votes.isEmpty());
-	assertTrue(votes.size() == n);
+        List<Vote> votes = Arrays.asList(response.getBody());
+        assertTrue(!votes.isEmpty());
+        assertTrue(votes.size() == n);
     }
 
     public void cleanup() {
-	votingRepository.deleteAll();
-	loginHelper.cleanup();
+        votingRepository.deleteAll();
+        loginHelper.cleanup();
     }
 
     public void given_no_existing_votes() {
-	// nothing happens here
+        // nothing happens here
     }
 
     public void then_no_votes_are_returned() {
-	List<Vote> votes = Arrays.asList(response.getBody());
-	assertTrue(votes.isEmpty());
+        List<Vote> votes = Arrays.asList(response.getBody());
+        assertTrue(votes.isEmpty());
     }
 }

@@ -21,36 +21,36 @@ public class JwtFilter extends GenericFilterBean {
     private final String secretKey;
 
     public JwtFilter(final String secretKey) {
-	this.secretKey = secretKey;
+        this.secretKey = secretKey;
     }
 
     @Override
     public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
-	    throws IOException, ServletException {
-	final HttpServletRequest request = (HttpServletRequest) req;
-	final HttpServletResponse response = (HttpServletResponse) res;
+            throws IOException, ServletException {
+        final HttpServletRequest request = (HttpServletRequest) req;
+        final HttpServletResponse response = (HttpServletResponse) res;
 
-	final String authHeader = request.getHeader("Authorization");
-	if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-	    response.sendError(HttpStatus.FORBIDDEN.value());
-	    chain.doFilter(req, res);
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.sendError(HttpStatus.FORBIDDEN.value());
+            chain.doFilter(req, res);
 
-	    return;
-	}
+            return;
+        }
 
-	final String token = authHeader.substring(7);
+        final String token = authHeader.substring(7);
 
-	try {
-	    final Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-	    request.setAttribute("claims", claims);
-	} catch (final SignatureException e) {
-	    response.sendError(HttpStatus.FORBIDDEN.value());
-	    chain.doFilter(req, res);
+        try {
+            final Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            request.setAttribute("claims", claims);
+        } catch (final SignatureException e) {
+            response.sendError(HttpStatus.FORBIDDEN.value());
+            chain.doFilter(req, res);
 
-	    return;
-	}
+            return;
+        }
 
-	chain.doFilter(req, res);
+        chain.doFilter(req, res);
     }
 
 }
