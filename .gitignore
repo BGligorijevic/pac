@@ -8,7 +8,7 @@
 .settings/
 .springBeans
 
-# Intellij
+# IntelliJ
 .idea/
 *.iml
 *.iws
@@ -17,4 +17,4 @@
 .vagrant
 
 # Maven
-*/target/*
+*/target/**
