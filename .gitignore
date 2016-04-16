@@ -17,4 +17,4 @@
 .vagrant
 
 # Maven
-*/target/**
+target/
