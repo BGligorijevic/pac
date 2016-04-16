@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 public class JwtFilter extends GenericFilterBean {
 
+    private static final String AUTHORIZATION_HEADER_PARAM = "Authorization";
     private static final int TOKEN_BEGIN_INDEX = 7;
     private String secretKey;
 
@@ -29,8 +31,13 @@ public class JwtFilter extends GenericFilterBean {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
 
-        final String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (shouldSkipFilter(request)) {
+            chain.doFilter(req, res);
+            return;
+        }
+
+        final String authHeader = request.getHeader(AUTHORIZATION_HEADER_PARAM);
+        if (noAuthToken(authHeader)) {
             response.sendError(HttpStatus.FORBIDDEN.value());
             chain.doFilter(req, res);
 
@@ -50,5 +57,14 @@ public class JwtFilter extends GenericFilterBean {
         }
 
         chain.doFilter(req, res);
+    }
+
+    private boolean noAuthToken(String authHeader) {
+        return authHeader == null || !authHeader.startsWith("Bearer ");
+    }
+
+    private boolean shouldSkipFilter(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/user/login") || (request.getRequestURI().equals("/api/votes") &&
+                request.getMethod().equals(RequestMethod.GET.name()));
     }
 }

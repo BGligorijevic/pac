@@ -62,6 +62,10 @@ public class VotingTestHelper {
         response = template.exchange(base, HttpMethod.GET, entity, Vote[].class);
     }
 
+    public void when_get_all_votes_with_no_authorization_request_is_sent() {
+        response = template.getForEntity(base, Vote[].class);
+    }
+
     public void then_exactly_n_votes_are_returned(final int n) {
         List<Vote> votes = Arrays.asList(response.getBody());
         assertTrue(!votes.isEmpty());

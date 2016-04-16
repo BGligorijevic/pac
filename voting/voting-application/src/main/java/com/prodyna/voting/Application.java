@@ -23,7 +23,6 @@ public class Application {
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new JwtFilter(secretKey));
-        registrationBean.addUrlPatterns("/api/*");
 
         return registrationBean;
     }

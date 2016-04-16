@@ -35,7 +35,7 @@ public class VotingIT  {
     }
 
     @Test
-    public void gets_all_votes_returns_votes() throws Exception {
+    public void all_votes_are_returned() throws Exception {
         $.given_a_logged_in_user_with_token();
         $.given_an_n_existing_number_of_votes(2);
         $.when_get_all_votes_request_is_sent();
@@ -43,7 +43,14 @@ public class VotingIT  {
     }
 
     @Test
-    public void get_all_votes_returns_zero_results() throws Exception {
+    public void all_votes_are_returned_even_if_user_is_not_logged_in() throws Exception {
+        $.given_an_n_existing_number_of_votes(3);
+        $.when_get_all_votes_with_no_authorization_request_is_sent();
+        $.then_exactly_n_votes_are_returned(3);
+    }
+
+    @Test
+    public void no_votes_are_returned_when_no_votes_exist() throws Exception {
         $.given_a_logged_in_user_with_token();
         $.given_no_existing_votes();
         $.when_get_all_votes_request_is_sent();

@@ -13,10 +13,10 @@ import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-public class VotingRestControllerTest {
+public class VotingRestApiTest {
 
     @InjectMocks
-    private VotingRestApi votingController;
+    private VotingRestApi votingRestApi;
 
     @Mock
     private VotingService votingService;
@@ -33,7 +33,7 @@ public class VotingRestControllerTest {
         votes.add(vote1);
 
         when(votingService.getAllVotes()).thenReturn(votes);
-        List<Vote> allVotes = votingController.getAllVotes();
+        List<Vote> allVotes = votingRestApi.getAllVotes();
         assertTrue(allVotes != null);
         assertTrue(allVotes.size() == 1);
         assertTrue(allVotes.get(0).getTitle().equals("vote1 title"));
