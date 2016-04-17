@@ -15,6 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Json web token filter which intercepts all incoming requests.
+ * Checks prove that valid token is sent as part of the incoming request (header).
+ * There are certain points which are allowed through filter without check (e.g. /login).
+ */
 public class JwtFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION_HEADER_PARAM = "Authorization";
@@ -64,7 +69,39 @@ public class JwtFilter extends GenericFilterBean {
     }
 
     private boolean shouldSkipFilter(HttpServletRequest request) {
-        return request.getRequestURI().startsWith("/user/login") || (request.getRequestURI().equals("/api/votes") &&
-                request.getMethod().equals(RequestMethod.GET.name()));
+        for (SkippedResources skippedResource : SkippedResources.values()) {
+            if (request.getRequestURI().equals(skippedResource.getUrl()) &&
+                    skippedResource.getHttpMethod().name().equals(request.getMethod())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resources for which to skip filter checks.
+     */
+    private enum SkippedResources {
+
+        LOGIN("/user/login", RequestMethod.POST),
+        GET_VOTES("/api/votes", RequestMethod.GET);
+
+        private String url;
+
+        private RequestMethod httpMethod;
+
+        SkippedResources(String url, RequestMethod httpMethod) {
+            this.url = url;
+            this.httpMethod = httpMethod;
+        }
+
+        public RequestMethod getHttpMethod() {
+            return httpMethod;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 }
