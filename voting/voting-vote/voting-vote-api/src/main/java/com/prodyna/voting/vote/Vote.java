@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 public class Vote {
 
+    private String voteId;
+
     private String title;
 
     private String description;

@@ -18,7 +18,7 @@ import com.prodyna.voting.vote.helper.VotingTestHelper;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class VotingIT  {
+public class VotingIT {
 
     @Value("${local.server.port}")
     private int tomcatPort;
@@ -55,6 +55,21 @@ public class VotingIT  {
         $.given_no_existing_votes();
         $.when_get_all_votes_request_is_sent();
         $.then_no_votes_are_returned();
+    }
+
+    @Test
+    public void correct_vote_is_returned() {
+        $.given_a_logged_in_user_with_token();
+        $.given_the_votes_with_ids("12345", "56789");
+        $.when_get_vote_request_is_sent("12345");
+        $.then_exactly_vote_with_id_is_returned("12345");
+    }
+
+    @Test
+    public void no_vote_is_returned_if_user_is_not_authenticated() {
+        $.given_the_votes_with_ids("12345", "56789");
+        $.when_get_vote_request_is_sent("12345");
+        $.then_the_http_status_forbidden_is_returned();
     }
 
     @After

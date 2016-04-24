@@ -54,7 +54,7 @@ public class JwtFilter extends GenericFilterBean {
         try {
             final Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             request.setAttribute("claims", claims);
-        } catch (final SignatureException e) {
+        } catch (final Exception e) {
             response.sendError(HttpStatus.FORBIDDEN.value());
             chain.doFilter(req, res);
 
