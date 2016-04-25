@@ -2,7 +2,6 @@ package com.prodyna.voting.auth.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.GenericFilterBean;
@@ -85,7 +84,7 @@ public class JwtFilter extends GenericFilterBean {
     private enum SkippedResources {
 
         LOGIN("/user/login", RequestMethod.POST),
-        GET_VOTES("/api/votes", RequestMethod.GET);
+        GET_POLLS("/api/polls", RequestMethod.GET);
 
         private String url;
 

@@ -23,7 +23,8 @@
     <modules>
         <module>voting-application</module>
         <module>voting-auth</module>
-        <module>voting-vote</module>
+        <module>voting-poll</module>
+        <module>voting-common</module>
     </modules>
 
     <dependencies>

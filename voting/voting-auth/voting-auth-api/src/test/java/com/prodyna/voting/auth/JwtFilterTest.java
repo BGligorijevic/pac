@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 @RunWith(PowerMockRunner.class)
 public class JwtFilterTest {
 
-    private static final String URL_VOTES = "/api/votes";
+    private static final String URL_POLLS = "/api/polls";
     private static final String URL_LOGIN = "/user/login";
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -37,9 +37,9 @@ public class JwtFilterTest {
     }
 
     @Test
-    public void skipsFilterForGetAllVotes() throws IOException, ServletException {
+    public void skipsFilterForGetAllPolls() throws IOException, ServletException {
         when(request.getMethod()).thenReturn(RequestMethod.GET.name());
-        when(request.getRequestURI()).thenReturn(URL_VOTES);
+        when(request.getRequestURI()).thenReturn(URL_POLLS);
 
         jwtFilter.doFilter(request, response, chain);
         verify(response, times(0)).sendError(anyInt());
@@ -47,9 +47,9 @@ public class JwtFilterTest {
     }
 
     @Test
-    public void returnsForbiddenStatusForVotesWithPost() throws IOException, ServletException {
+    public void returnsForbiddenStatusForPollsWithPost() throws IOException, ServletException {
         when(request.getMethod()).thenReturn(RequestMethod.POST.name());
-        when(request.getRequestURI()).thenReturn(URL_VOTES);
+        when(request.getRequestURI()).thenReturn(URL_POLLS);
 
         jwtFilter.doFilter(request, response, chain);
         verify(response, times(1)).sendError(HttpStatus.FORBIDDEN.value());
