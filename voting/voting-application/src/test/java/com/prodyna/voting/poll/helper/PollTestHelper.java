@@ -4,8 +4,9 @@ import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.auth.user.UserRepository;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollRepository;
-import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
@@ -20,26 +21,33 @@ import static org.junit.Assert.assertTrue;
 public class PollTestHelper {
 
     private final String getAllPollsUrl;
-    private final RestTemplate template;
+    private final RestOperations template;
     private final PollRepository pollRepository;
     private final LoginITHelper loginHelper;
     private String token;
+
     private ResponseEntity<Poll[]> allPollsResponse;
     private ResponseEntity<Poll> onePollResponse;
 
-    public PollTestHelper(final int port, final PollRepository pollRepository,
-                          final UserRepository userRepository) throws MalformedURLException {
+    public PollTestHelper(int port, PollRepository pollRepository,
+                          UserRepository userRepository) throws MalformedURLException {
         this.pollRepository = pollRepository;
         URL baseUrl = new URL("http://localhost:" + port + "/api/polls");
         getAllPollsUrl = baseUrl.toString();
-        template = new TestRestTemplate();
+        this.template = new RestTemplate();
 
         loginHelper = new LoginITHelper(port, userRepository);
     }
 
     public void given_a_logged_in_user_with_token() {
         loginHelper.given_some_existing_users();
-        loginHelper.when_the_correct_login_credentials_are_sent();
+        loginHelper.when_the_correct_login_credentials_are_sent("Tom", "tom_jones_446");
+        token = loginHelper.then_the_access_token_is_returned();
+    }
+
+    public void given_a_logged_in_admin_user_with_token() {
+        loginHelper.given_an_admin_user();
+        loginHelper.when_the_correct_login_credentials_are_sent("Admin", "admin_446");
         token = loginHelper.then_the_access_token_is_returned();
     }
 
@@ -61,6 +69,7 @@ public class PollTestHelper {
             poll.setPollId(id);
             poll.setTitle("Your favourite PC game?");
             poll.setChangeDate(new Date());
+            poll.setAuthor(loginHelper.given_an_admin_user());
 
             pollRepository.save(poll);
         }
@@ -70,14 +79,30 @@ public class PollTestHelper {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        allPollsResponse = template.exchange(getAllPollsUrl, HttpMethod.GET, entity, Poll[].class);
+
+        try {
+            allPollsResponse = template.exchange(getAllPollsUrl, HttpMethod.GET, entity, Poll[].class);
+        } catch (HttpClientErrorException e) {
+            allPollsResponse = new ResponseEntity<>(e.getStatusCode());
+        }
     }
 
     public void when_get_poll_request_with_id_is_sent(String id) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        onePollResponse = template.exchange(getAllPollsUrl + "/" + id, HttpMethod.GET, entity, Poll.class);
+        try {
+            onePollResponse = template.exchange(getAllPollsUrl + "/" + id, HttpMethod.GET, entity, Poll.class);
+        } catch (HttpClientErrorException e) {
+            onePollResponse = new ResponseEntity<>(e.getStatusCode());
+        }
+    }
+
+    public void when_delete_poll_request_with_id_is_sent(String id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        template.delete(getAllPollsUrl + "/" + id, entity);
     }
 
     public void then_exactly_poll_with_id_is_returned(String id) {
@@ -86,15 +111,12 @@ public class PollTestHelper {
         assertTrue(pollResult.getPollId().equals(id));
     }
 
-    public void then_the_http_status_forbidden_is_returned() {
-        Poll pollResult = onePollResponse.getBody();
-        assertTrue(pollResult.getPollId() == null);
-        assertTrue(pollResult.getTitle() == null);
-        assertTrue(onePollResponse.getStatusCode().equals(HttpStatus.FORBIDDEN));
-    }
-
-    public void when_get_all_polls_with_no_authorization_request_is_sent() {
-        allPollsResponse = template.getForEntity(getAllPollsUrl, Poll[].class);
+    public void then_the_http_status_unauthorized_is_returned() {
+        if (onePollResponse != null) {
+            assertTrue(onePollResponse.getStatusCode().equals(HttpStatus.UNAUTHORIZED));
+        } else if (allPollsResponse != null) {
+            assertTrue(allPollsResponse.getStatusCode().equals(HttpStatus.UNAUTHORIZED));
+        }
     }
 
     public void then_exactly_n_polls_are_returned(final int n) {
@@ -116,5 +138,4 @@ public class PollTestHelper {
         List<Poll> polls = Arrays.asList(allPollsResponse.getBody());
         assertTrue(polls.isEmpty());
     }
-
 }

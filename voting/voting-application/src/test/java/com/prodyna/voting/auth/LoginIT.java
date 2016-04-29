@@ -37,7 +37,7 @@ public class LoginIT {
     @Test
     public void login_succeeds_for_existing_user() throws Exception {
         $.given_some_existing_users();
-        $.when_the_correct_login_credentials_are_sent();
+        $.when_the_correct_login_credentials_are_sent("Tom", "tom_jones_446");
         $.then_the_access_token_is_returned();
     }
 

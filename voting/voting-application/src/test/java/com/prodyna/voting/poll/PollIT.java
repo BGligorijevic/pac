@@ -2,8 +2,10 @@ package com.prodyna.voting.poll;
 
 import com.prodyna.voting.Application;
 import com.prodyna.voting.auth.user.UserRepository;
+import com.prodyna.voting.poll.helper.PollTestHelper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import com.prodyna.voting.poll.helper.PollTestHelper;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -43,10 +45,10 @@ public class PollIT {
     }
 
     @Test
-    public void all_polls_are_returned_even_if_user_is_not_logged_in() throws Exception {
-        $.given_an_n_existing_number_of_polls(3);
-        $.when_get_all_polls_with_no_authorization_request_is_sent();
-        $.then_exactly_n_polls_are_returned(3);
+    public void get_all_polls_not_returned_when_user_is_not_authenticated() throws Exception {
+        $.given_an_n_existing_number_of_polls(2);
+        $.when_get_all_polls_request_is_sent();
+        $.then_the_http_status_unauthorized_is_returned();
     }
 
     @Test
@@ -66,10 +68,18 @@ public class PollIT {
     }
 
     @Test
-    public void no_poll_is_returned_if_user_is_not_authenticated() {
+    public void get_poll_forbidden_when_user_is_not_authenticated() {
         $.given_the_polls_with_ids("12345", "56789");
         $.when_get_poll_request_with_id_is_sent("12345");
-        $.then_the_http_status_forbidden_is_returned();
+        $.then_the_http_status_unauthorized_is_returned();
+    }
+
+    @Test
+    @Ignore//FIXME
+    public void delete_poll_succeeds() {
+        $.given_a_logged_in_admin_user_with_token();
+        $.given_the_polls_with_ids("12345", "56789");
+        $.when_delete_poll_request_with_id_is_sent("56789");
     }
 
     @After

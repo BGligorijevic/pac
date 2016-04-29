@@ -1,6 +1,6 @@
 package com.prodyna.voting;
 
-import com.prodyna.voting.auth.filter.JwtFilter;
+import com.prodyna.voting.auth.filter.SecurityFilter;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -20,9 +20,10 @@ public class Application {
     }
 
     @Bean
-    public FilterRegistrationBean jwtFilter() {
+    public FilterRegistrationBean securityFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setFilter(new JwtFilter(secretKey));
+        registrationBean.setFilter(new SecurityFilter(secretKey));
+        registrationBean.addUrlPatterns("/api/*");
 
         return registrationBean;
     }

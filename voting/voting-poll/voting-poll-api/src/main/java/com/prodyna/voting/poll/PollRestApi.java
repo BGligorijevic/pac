@@ -1,10 +1,13 @@
 package com.prodyna.voting.poll;
 
+import com.prodyna.voting.auth.RestResources;
+import com.prodyna.voting.auth.user.User;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,7 +16,7 @@ import java.util.Optional;
  * Voting Rest controller handling all incoming Rest requests.
  */
 @RestController
-@RequestMapping(value = "/api/polls")
+@RequestMapping(value = RestResources.UrlPaths.POLLS_URL)
 @Log4j
 public class PollRestApi {
 
@@ -27,11 +30,19 @@ public class PollRestApi {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Poll getPoll(@PathVariable String id) {
-        Optional<Poll> vote = votingService.getPoll(id);
-        if (!vote.isPresent()) {
+        Optional<Poll> poll = votingService.getPoll(id);
+        if (!poll.isPresent()) {
             throw new NoSuchElementException();
         }
-        return vote.get();
+
+        return poll.get();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deletePoll(@PathVariable String id, HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+
+        votingService.deletePoll(id, user);
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)

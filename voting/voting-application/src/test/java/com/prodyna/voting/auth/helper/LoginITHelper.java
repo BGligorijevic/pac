@@ -1,5 +1,6 @@
 package com.prodyna.voting.auth.helper;
 
+import com.prodyna.voting.auth.user.Role;
 import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.auth.user.UserRepository;
 import org.springframework.boot.test.TestRestTemplate;
@@ -28,14 +29,29 @@ public class LoginITHelper {
 
     public void given_some_existing_users() {
         User user1 = new User();
+        user1.setUserId("12345678");
         user1.setUserName("Tom");
         user1.setPassword("tom_jones_446");
+        user1.setRole(Role.USER);
         userRepository.save(user1);
 
         User user2 = new User();
+        user2.setUserId("99999999");
         user2.setUserName("Dirk");
         user2.setPassword("Nowitzki");
+        user2.setRole(Role.USER);
         userRepository.save(user2);
+    }
+
+    public User given_an_admin_user() {
+        User user1 = new User();
+        user1.setUserId("12345678");
+        user1.setUserName("Admin");
+        user1.setPassword("admin_446");
+        user1.setRole(Role.ADMINISTRATOR);
+        userRepository.save(user1);
+
+        return user1;
     }
 
     public void then_the_unauthorized_status_code_is_returned() {
@@ -43,13 +59,13 @@ public class LoginITHelper {
         assertTrue(response.getStatusCode() == HttpStatus.UNAUTHORIZED);
     }
 
-    public void when_the_correct_login_credentials_are_sent() {
+    public void when_the_correct_login_credentials_are_sent(String username, String pass) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
         User knownUser = new User();
-        knownUser.setUserName("Tom");
-        knownUser.setPassword("tom_jones_446");
+        knownUser.setUserName(username);
+        knownUser.setPassword(pass);
 
         HttpEntity<User> entity = new HttpEntity<>(knownUser);
 
