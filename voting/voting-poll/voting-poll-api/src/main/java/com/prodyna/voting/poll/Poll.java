@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 public class Poll {
 
+    private String _id;
+
     private String pollId;
 
     private String title;

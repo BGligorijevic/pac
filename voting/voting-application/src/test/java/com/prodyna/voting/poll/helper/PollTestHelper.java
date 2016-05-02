@@ -11,10 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -58,6 +55,7 @@ public class PollTestHelper {
             poll.setTitle("Choose your favourite operating system: " + i);
             poll.setDescription("It cannot possibly be Windows, right?");
             poll.setChangeDate(new Date());
+            poll.setAuthor(loginHelper.getAdmin());
 
             pollRepository.save(poll);
         }
@@ -69,40 +67,30 @@ public class PollTestHelper {
             poll.setPollId(id);
             poll.setTitle("Your favourite PC game?");
             poll.setChangeDate(new Date());
-            poll.setAuthor(loginHelper.given_an_admin_user());
+            poll.setAuthor(loginHelper.getAdmin());
 
             pollRepository.save(poll);
         }
     }
 
     public void when_get_all_polls_request_is_sent() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
         try {
-            allPollsResponse = template.exchange(getAllPollsUrl, HttpMethod.GET, entity, Poll[].class);
+            allPollsResponse = template.exchange(getAllPollsUrl, HttpMethod.GET, prepareAuthorizedEntity(), Poll[].class);
         } catch (HttpClientErrorException e) {
             allPollsResponse = new ResponseEntity<>(e.getStatusCode());
         }
     }
 
     public void when_get_poll_request_with_id_is_sent(String id) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
         try {
-            onePollResponse = template.exchange(getAllPollsUrl + "/" + id, HttpMethod.GET, entity, Poll.class);
+            onePollResponse = template.exchange(getAllPollsUrl + "/" + id, HttpMethod.GET, prepareAuthorizedEntity(), Poll.class);
         } catch (HttpClientErrorException e) {
             onePollResponse = new ResponseEntity<>(e.getStatusCode());
         }
     }
 
     public void when_delete_poll_request_with_id_is_sent(String id) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        template.delete(getAllPollsUrl + "/" + id, entity);
+        template.exchange(getAllPollsUrl + "/{id}", HttpMethod.DELETE, prepareAuthorizedEntity(), String.class, id);
     }
 
     public void then_exactly_poll_with_id_is_returned(String id) {
@@ -137,5 +125,11 @@ public class PollTestHelper {
     public void then_no_polls_are_returned() {
         List<Poll> polls = Arrays.asList(allPollsResponse.getBody());
         assertTrue(polls.isEmpty());
+    }
+
+    private HttpEntity<?> prepareAuthorizedEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        return new HttpEntity<>(headers);
     }
 }

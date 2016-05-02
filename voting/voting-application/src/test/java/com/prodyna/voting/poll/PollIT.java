@@ -5,7 +5,6 @@ import com.prodyna.voting.auth.user.UserRepository;
 import com.prodyna.voting.poll.helper.PollTestHelper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +74,6 @@ public class PollIT {
     }
 
     @Test
-    @Ignore//FIXME
     public void delete_poll_succeeds() {
         $.given_a_logged_in_admin_user_with_token();
         $.given_the_polls_with_ids("12345", "56789");

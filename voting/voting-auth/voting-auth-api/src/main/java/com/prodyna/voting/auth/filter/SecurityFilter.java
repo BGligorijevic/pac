@@ -65,8 +65,8 @@ public class SecurityFilter extends GenericFilterBean {
             return;
         }
 
-        chain.doFilter(req, res);
         request.setAttribute("user", user);
+        chain.doFilter(req, res);
     }
 
     private User parseToken(String token) {

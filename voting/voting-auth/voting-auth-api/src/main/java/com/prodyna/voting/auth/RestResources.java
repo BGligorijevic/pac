@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public enum RestResources {
 
-    GET_ALL_POLLS(UrlPaths.POLLS_URL, RequestMethod.GET, Role.USER);
+    GET_ALL_POLLS(UrlPaths.POLLS_URL, RequestMethod.GET, Role.USER),
+    DELETE_POLL(UrlPaths.POLLS_URL, RequestMethod.DELETE, Role.USER);
 
     private String url;
     private RequestMethod httpMethod;

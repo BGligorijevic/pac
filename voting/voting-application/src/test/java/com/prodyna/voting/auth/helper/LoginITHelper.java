@@ -19,6 +19,7 @@ public class LoginITHelper {
     private final RestTemplate template;
     private final UserRepository userRepository;
     private ResponseEntity<String> response;
+    private User admin;
 
     public LoginITHelper(final int port, final UserRepository userRepository) throws MalformedURLException {
         this.userRepository = userRepository;
@@ -50,6 +51,7 @@ public class LoginITHelper {
         user1.setPassword("admin_446");
         user1.setRole(Role.ADMINISTRATOR);
         userRepository.save(user1);
+        admin = user1;
 
         return user1;
     }
@@ -95,5 +97,9 @@ public class LoginITHelper {
 
     public void cleanup() {
         userRepository.deleteAll();
+    }
+
+    public User getAdmin() {
+        return admin;
     }
 }
