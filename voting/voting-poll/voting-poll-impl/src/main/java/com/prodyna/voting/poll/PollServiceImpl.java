@@ -21,14 +21,14 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public Optional<Poll> getPoll(String pollId) {
-        Poll poll = pollRepository.findByPollId(pollId);
+    public Optional<Poll> getPoll(String id) {
+        Poll poll = pollRepository.findOne(id);
         return Optional.ofNullable(poll);
     }
 
     @Override
-    public void deletePoll(String pollId, User user) {
-        Poll poll = pollRepository.findByPollId(pollId);
+    public void deletePoll(String id, User user) {
+        Poll poll = pollRepository.findOne(id);
         Reject.ifNull(poll, "No such poll exists.");
 
         if (!pollBelongsToUser(user, poll) && !Role.isUserAdmin(user)) {

@@ -4,16 +4,17 @@ import com.prodyna.voting.auth.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-public class Poll {
+public class Poll implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String _id;
-
-    private String pollId;
 
     private String title;
 

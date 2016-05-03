@@ -2,6 +2,7 @@ package com.prodyna.voting.auth;
 
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.Application;
+import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.auth.user.UserRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -36,14 +37,14 @@ public class LoginIT {
 
     @Test
     public void login_succeeds_for_existing_user() throws Exception {
-        $.given_some_existing_users();
-        $.when_the_correct_login_credentials_are_sent("Tom", "tom_jones_446");
+        $.given_existing_users(TestUser.values());
+        $.when_the_correct_login_credentials_are_sent(TestUser.USER_1);
         $.then_the_access_token_is_returned();
     }
 
     @Test
     public void login_fails_for_unknown_user() {
-        $.given_some_existing_users();
+        $.given_existing_users(TestUser.values());
         $.when_the_wrong_login_credentials_are_sent();
         $.then_the_unauthorized_status_code_is_returned();
     }

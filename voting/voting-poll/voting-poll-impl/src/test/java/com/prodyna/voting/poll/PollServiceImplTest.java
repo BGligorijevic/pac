@@ -54,7 +54,7 @@ public class PollServiceImplTest {
     public void getPollReturnsPoll() {
         Poll poll = createVote(VOTE_ID, "Your favourite OS?", createNormalUser(USER_ID_1));
 
-        when(pollRepository.findByPollId(VOTE_ID)).thenReturn(poll);
+        when(pollRepository.findOne(VOTE_ID)).thenReturn(poll);
 
         Optional<Poll> voteResult = pollService.getPoll(VOTE_ID);
         assertTrue(voteResult.isPresent());
@@ -78,9 +78,9 @@ public class PollServiceImplTest {
         User normalUser = createNormalUser(USER_ID_1);
         Poll poll = createVote(VOTE_ID, "Your favourite OS?", createNormalUser(USER_ID_1));
 
-        when(pollRepository.findByPollId(VOTE_ID)).thenReturn(poll);
+        when(pollRepository.findOne(VOTE_ID)).thenReturn(poll);
 
-        pollService.deletePoll(poll.getPollId(), normalUser);
+        pollService.deletePoll(poll.get_id(), normalUser);
 
         verify(pollRepository).delete(poll);
     }
@@ -93,8 +93,8 @@ public class PollServiceImplTest {
     public void pollIsDeletedAlwaysWhenUserIsAdmin() {
         Poll poll = createVote(VOTE_ID, "Your favourite OS?", createNormalUser(USER_ID_2));
 
-        when(pollRepository.findByPollId(VOTE_ID)).thenReturn(poll);
-        pollService.deletePoll(poll.getPollId(), createUser(true, USER_ADMIN_ID));
+        when(pollRepository.findOne(VOTE_ID)).thenReturn(poll);
+        pollService.deletePoll(poll.get_id(), createUser(true, USER_ADMIN_ID));
 
         verify(pollRepository).delete(poll);
     }
@@ -106,8 +106,8 @@ public class PollServiceImplTest {
     public void pollIsNotDeletedWhenUserIsNormalUserAndPollIsNotHis() {
         Poll poll = createVote(VOTE_ID, "Your favourite OS?", createNormalUser(USER_ID_1));
 
-        when(pollRepository.findByPollId(VOTE_ID)).thenReturn(poll);
-        pollService.deletePoll(poll.getPollId(), createNormalUser(USER_ID_2));
+        when(pollRepository.findOne(VOTE_ID)).thenReturn(poll);
+        pollService.deletePoll(poll.get_id(), createNormalUser(USER_ID_2));
     }
 
     /**
@@ -115,15 +115,15 @@ public class PollServiceImplTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void pollIsNotDeletedWhenPollIsNotFoundById() {
-        when(pollRepository.findByPollId(VOTE_ID)).thenReturn(null);
+        when(pollRepository.findOne(VOTE_ID)).thenReturn(null);
         pollService.deletePoll(VOTE_ID, createNormalUser(USER_ID_1));
     }
 
-    private Poll createVote(String voteId, String title, User author) {
+    private Poll createVote(String id, String title, User author) {
         Poll poll = new Poll();
 
         poll.setAuthor(author);
-        poll.setPollId(voteId);
+        poll.set_id(id);
         poll.setTitle(title);
         poll.setDescription(title);
         poll.setChangeDate(new Date());
