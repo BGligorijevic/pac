@@ -23,7 +23,7 @@ public class Application {
     public FilterRegistrationBean securityFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new SecurityFilter(secretKey));
-        registrationBean.addUrlPatterns("/api/*");
+        registrationBean.addUrlPatterns(SecurityFilter.SECURED_API_PATH);
 
         return registrationBean;
     }

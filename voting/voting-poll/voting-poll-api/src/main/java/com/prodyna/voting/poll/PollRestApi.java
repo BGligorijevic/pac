@@ -28,6 +28,11 @@ public class PollRestApi {
         return votingService.getAllPolls();
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public Poll createPoll(@RequestBody Poll poll) {
+        return votingService.createPoll(poll);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Poll getPoll(@PathVariable String id) {
         Optional<Poll> poll = votingService.getPoll(id);

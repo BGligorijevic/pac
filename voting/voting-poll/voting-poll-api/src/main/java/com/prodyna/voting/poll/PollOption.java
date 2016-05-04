@@ -9,12 +9,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PollOptions implements Serializable {
+public class PollOption implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String name;
 
-    public PollOptions() {
+    /** Please do not remove, Spring Data needs default constructor. */
+    public PollOption() {
     }
 }

@@ -64,7 +64,7 @@ public class PollTestHelper {
 
     public void when_get_all_polls_request_is_sent() {
         try {
-            allPollsResponse = template.exchange(getAllPollsUrl, HttpMethod.GET, prepareAuthorizedEntity(), Poll[].class);
+            allPollsResponse = template.exchange(getAllPollsUrl, HttpMethod.GET, getHeader(), Poll[].class);
         } catch (HttpClientErrorException e) {
             allPollsResponse = new ResponseEntity<>(e.getStatusCode());
         }
@@ -72,7 +72,7 @@ public class PollTestHelper {
 
     public void when_get_poll_request_with_id_is_sent(String id) {
         try {
-            onePollResponse = template.exchange(getAllPollsUrl + "/" + id, HttpMethod.GET, prepareAuthorizedEntity(), Poll.class);
+            onePollResponse = template.exchange(getAllPollsUrl + "/" + id, HttpMethod.GET, getHeader(), Poll.class);
         } catch (HttpClientErrorException e) {
             onePollResponse = new ResponseEntity<>(e.getStatusCode());
         }
@@ -80,7 +80,7 @@ public class PollTestHelper {
 
     public void when_delete_poll_request_with_id_is_sent(String id) {
         try {
-            template.exchange(getAllPollsUrl + "/{id}", HttpMethod.DELETE, prepareAuthorizedEntity(), String.class, id);
+            template.exchange(getAllPollsUrl + "/{id}", HttpMethod.DELETE, getHeader(), String.class, id);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
                 forbiddenReturned = true;
@@ -88,13 +88,21 @@ public class PollTestHelper {
         }
     }
 
+    public void when_create_poll_request_is_sent(TestPoll testPoll) {
+        try {
+            template.postForObject(getAllPollsUrl, getPollEntity(testPoll), Poll.class );
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void then_no_poll_is_deleted() {
         assertTrue(forbiddenReturned == true);
     }
 
-    public void then_there_are_n_polls_left(int n) {
+    public void then_N_polls_exist(int n) {
         when_get_all_polls_request_is_sent();
-        then_exactly_n_polls_are_returned(n);
+        then_exactly_N_polls_are_returned(n);
     }
 
     public void then_exactly_poll_with_id_is_returned(String id) {
@@ -111,7 +119,7 @@ public class PollTestHelper {
         }
     }
 
-    public void then_exactly_n_polls_are_returned(final int n) {
+    public void then_exactly_N_polls_are_returned(final int n) {
         List<Poll> polls = Arrays.asList(allPollsResponse.getBody());
         assertTrue(!polls.isEmpty());
         assertTrue(polls.size() == n);
@@ -121,6 +129,9 @@ public class PollTestHelper {
         pollRepository.deleteAll();
         loginHelper.cleanup();
         forbiddenReturned = false;
+        onePollResponse = null;
+        allPollsResponse = null;
+        token = null;
     }
 
     public void given_no_existing_polls() {
@@ -132,9 +143,18 @@ public class PollTestHelper {
         assertTrue(polls.isEmpty());
     }
 
-    private HttpEntity<?> prepareAuthorizedEntity() {
+    private HttpEntity<?> getHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
+
         return new HttpEntity<>(headers);
+    }
+
+    private HttpEntity<?> getPollEntity(TestPoll testPoll) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + token);
+
+        return new HttpEntity<>(testPoll.toPollObject(), headers);
     }
 }

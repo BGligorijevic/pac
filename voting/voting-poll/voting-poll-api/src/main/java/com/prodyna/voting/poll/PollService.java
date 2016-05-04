@@ -11,6 +11,14 @@ import java.util.Optional;
 public interface PollService {
 
     /**
+     * Creates new poll with the specified poll data.
+     *
+     * @param poll Poll to save
+     * @return Newly created poll with id field set
+     */
+    Poll createPoll(Poll poll);
+
+    /**
      * Returns all polls.
      *
      * @return

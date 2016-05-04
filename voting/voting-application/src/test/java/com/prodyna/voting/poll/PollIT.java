@@ -37,12 +37,17 @@ public class PollIT {
         $ = new PollTestHelper(tomcatPort, pollRepository, userRepository);
     }
 
+    @After
+    public void tearDown() {
+        $.cleanup();
+    }
+
     @Test
     public void all_polls_are_returned() throws Exception {
         $.given_a_logged_in_user(TestUser.USER_1);
         $.given_the_polls(TestPoll.CAR, TestPoll.ICE_CREAM);
         $.when_get_all_polls_request_is_sent();
-        $.then_exactly_n_polls_are_returned(2);
+        $.then_exactly_N_polls_are_returned(2);
     }
 
     @Test
@@ -76,23 +81,34 @@ public class PollIT {
     }
 
     @Test
-    public void delete_poll_succeeds() {
+    public void delete_poll_succeeds_if_admin() {
         $.given_a_logged_in_user(TestUser.ADMIN_1);
         $.given_the_polls(TestPoll.values());
         $.when_delete_poll_request_with_id_is_sent(TestPoll.ICE_CREAM.get_id());
-        $.then_there_are_n_polls_left(TestPoll.values().length - 1);
+        $.then_N_polls_exist(TestPoll.values().length - 1);
     }
 
     @Test
-    public void delete_poll_fails_if_not_admin_and_not_his_poll() {
+    public void delete_poll_fails_if_not_admin_and_not_his_own_poll() {
         $.given_a_logged_in_user(TestUser.USER_1);
         $.given_the_polls(TestPoll.values());
         $.when_delete_poll_request_with_id_is_sent(TestPoll.CAR.get_id());
         $.then_no_poll_is_deleted();
     }
 
-    @After
-    public void tearDown() {
-        $.cleanup();
+    @Test
+    public void delete_poll_succeeds_if_his_own_poll() {
+        $.given_a_logged_in_user(TestUser.USER_1);
+        $.given_the_polls(TestPoll.values());
+        $.when_delete_poll_request_with_id_is_sent(TestPoll.OS.get_id());
+        $.then_N_polls_exist(TestPoll.values().length - 1);
+    }
+
+    @Test
+    public void create_vote_succeeds() {
+        $.given_a_logged_in_user(TestUser.USER_2);
+        $.given_the_polls(TestPoll.OS);
+        $.when_create_poll_request_is_sent(TestPoll.ICE_CREAM);
+        $.then_N_polls_exist(2);
     }
 }

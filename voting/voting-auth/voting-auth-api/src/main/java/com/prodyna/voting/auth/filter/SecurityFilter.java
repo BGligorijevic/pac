@@ -19,13 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Security filter which intercepts all incoming requests.
+ * Security filter which intercepts all incoming requests under {@link SecurityFilter#SECURED_API_PATH}.
  * Authorization is implemented with Json Web Token.
  * Checks prove that valid token is sent as part of the incoming request (header).
  */
 @Component
 public class SecurityFilter extends GenericFilterBean {
 
+    public static final String SECURED_API_PATH = "/api/*";
     private static final String AUTHORIZATION_HEADER_PARAM = "Authorization";
     private static final int TOKEN_BEGIN_INDEX = 7;
 
