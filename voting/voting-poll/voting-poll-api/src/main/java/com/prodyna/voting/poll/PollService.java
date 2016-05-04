@@ -15,8 +15,20 @@ public interface PollService {
      *
      * @param poll Poll to save
      * @return Newly created poll with id field set
+     * @throws IllegalArgumentException If input is not valid (min. 2 options etc)
      */
     Poll createPoll(Poll poll);
+
+    /**
+     * Edits an existing {@link Poll}.
+     *
+     * @param poll Poll to change
+     * @param user User making the change
+     * @return Changed poll
+     * @throws IllegalArgumentException If ID field is not specified or poll with such ID does not exist or
+     *                                  user has no permission to edit the poll.
+     */
+    Poll editPoll(Poll poll, User user);
 
     /**
      * Returns all polls.

@@ -90,10 +90,28 @@ public class PollTestHelper {
 
     public void when_create_poll_request_is_sent(TestPoll testPoll) {
         try {
-            template.postForObject(getAllPollsUrl, getPollEntity(testPoll), Poll.class );
+            template.postForObject(getAllPollsUrl, getPollEntity(testPoll), Poll.class);
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
         }
+    }
+
+    public void when_edit_poll_request_is_sent(TestPoll testPoll) {
+        try {
+            template.put(getAllPollsUrl, getPollEntity(testPoll), Poll.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
+                forbiddenReturned = true;
+            }
+        }
+    }
+
+    public void then_poll_has_correct_data(TestPoll testPoll) {
+        Poll pollResult = onePollResponse.getBody();
+        assertTrue(pollResult != null);
+
+        assertTrue(testPoll.getTitle().equals(pollResult.getTitle()));
+        assertTrue(testPoll.getPollOptions().size() == pollResult.getPollOptions().size());
     }
 
     public void then_no_poll_is_deleted() {

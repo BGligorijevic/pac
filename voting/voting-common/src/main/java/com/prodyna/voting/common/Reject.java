@@ -1,6 +1,7 @@
 package com.prodyna.voting.common;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Utility function to make it easier to work with null checks.
@@ -16,6 +17,12 @@ public final class Reject {
 
     public static void ifNull(Object object, String description) {
         if (object == null) {
+            always(description);
+        }
+    }
+
+    public static <T> void ifAbsent(Optional<T> optional, String description) {
+        if (!optional.isPresent()) {
             always(description);
         }
     }

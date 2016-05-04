@@ -33,6 +33,11 @@ public class PollRestApi {
         return votingService.createPoll(poll);
     }
 
+    @RequestMapping(method = RequestMethod.PUT)
+    public Poll editPoll(@RequestBody Poll poll, HttpServletRequest request) {
+        return votingService.editPoll(poll, userFromRequest(request));
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Poll getPoll(@PathVariable String id) {
         Optional<Poll> poll = votingService.getPoll(id);
@@ -45,9 +50,7 @@ public class PollRestApi {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePoll(@PathVariable String id, HttpServletRequest request) {
-        User user = (User) request.getAttribute("user");
-
-        votingService.deletePoll(id, user);
+        votingService.deletePoll(id, userFromRequest(request));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
@@ -66,5 +69,9 @@ public class PollRestApi {
     @ExceptionHandler(Exception.class)
     private void handleInternalError(final Exception exception) {
         log.error("Generic exception occured.", exception);
+    }
+
+    private User userFromRequest(HttpServletRequest request) {
+        return (User) request.getAttribute("user");
     }
 }

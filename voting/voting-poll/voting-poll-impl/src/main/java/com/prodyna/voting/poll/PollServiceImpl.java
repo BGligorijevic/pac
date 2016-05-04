@@ -18,13 +18,27 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public Poll createPoll(Poll poll) {
-        Reject.ifNull(poll, "Poll must be non-null.");
-        Reject.ifNull(poll.getPollOptions(), "Poll must have poll options.");
-        Reject.ifLessElementsThan(poll.getPollOptions(), 2, "Poll must have at least 2 options.");
+        validatePoll(poll);
 
         if (poll.getChangeDate() == null) {
             poll.setChangeDate(new Date());
         }
+
+        return pollRepository.insert(poll);
+    }
+
+    @Override
+    public Poll editPoll(Poll poll, User user) {
+        validatePoll(poll);
+        Reject.ifNull(poll.get_id(), "No poll id specified.");
+        Reject.ifNull(user, "No user specified.");
+
+        if (!pollBelongsToUser(user, poll) && !Role.isUserAdmin(user)) {
+            Reject.always("User is not allowed to change this poll.");
+        }
+
+        Poll foundPoll = pollRepository.findOne(poll.get_id());
+        Reject.ifNull(foundPoll, "No Poll with such ID exists.");
 
         return pollRepository.save(poll);
     }
@@ -42,6 +56,8 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public void deletePoll(String id, User user) {
+        Reject.ifNull(user, "No user specified.");
+
         Poll poll = pollRepository.findOne(id);
         Reject.ifNull(poll, "No such poll exists.");
 
@@ -53,5 +69,10 @@ public class PollServiceImpl implements PollService {
 
     private boolean pollBelongsToUser(User user, Poll poll) {
         return poll.getAuthor().getUserId().equals(user.getUserId());
+    }
+
+    private void validatePoll(Poll poll) {
+        Reject.ifNull(poll, "Poll must be non-null.");
+        Reject.ifLessElementsThan(poll.getPollOptions(), 2, "Poll must have at least 2 options.");
     }
 }

@@ -3,6 +3,7 @@ package com.prodyna.voting.auth.filter;
 import com.prodyna.voting.auth.RestResources;
 import com.prodyna.voting.auth.user.Role;
 import com.prodyna.voting.auth.user.User;
+import com.prodyna.voting.common.Reject;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,7 +74,7 @@ public class SecurityFilter extends GenericFilterBean {
     private User parseToken(String token) {
         final Claims jwtClaims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         if (jwtClaims == null || jwtClaims.get("role") == null || jwtClaims.getSubject() == null) {
-            throw new IllegalArgumentException("Illegal token received.");
+            Reject.always("Illegal token received.");
         }
         String roleName = (String) jwtClaims.get("role");
         Role role = Role.forRoleValue(roleName);
@@ -92,7 +93,7 @@ public class SecurityFilter extends GenericFilterBean {
     private void checkRole(Role role, HttpServletRequest request) {
         RestResources resource = RestResources.getForUrlAndPath(request.getRequestURI(), request.getMethod());
         if (!resource.hasRole(role)) {
-            throw new IllegalArgumentException("User does not have required role.");
+            Reject.always("User does not have required role.");
         }
     }
 }

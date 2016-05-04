@@ -7,9 +7,7 @@ import com.prodyna.voting.poll.PollOption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Sample test poll data.
@@ -26,7 +24,10 @@ public enum TestPoll {
             Arrays.asList(new PollOption[]{new PollOption("Windows"), new PollOption("Ubuntu"), new PollOption("MacOS")})),
     CAR("656", "Best car ever?", "Please vote the best car ever made.",
             TestUser.USER_2.toUserObject(), new Date(),
-            Arrays.asList(new PollOption[]{new PollOption("BMW"), new PollOption("Audi"), new PollOption("Ferrari")}));
+            Arrays.asList(new PollOption[]{new PollOption("BMW"), new PollOption("Audi"), new PollOption("Ferrari")})),
+    CHANGED_ICE_CREAM("123", "Your favourite Ice Cream?", "Please choose your favourite ice cream flavour.",
+            TestUser.USER_1.toUserObject(), new Date(),
+            Arrays.asList(new PollOption[]{new PollOption("Vanilla"), new PollOption("Snickers"), new PollOption("Chocolate")}));
 
     private String _id;
     private String title;
@@ -47,4 +48,13 @@ public enum TestPoll {
         return poll;
     }
 
-}
+    public static TestPoll[] testPolls() {
+        TestPoll[] testPolls = new TestPoll[3];
+
+        testPolls[0] = ICE_CREAM;
+        testPolls[1] = OS;
+        testPolls[2] = CAR;
+
+        return testPolls;
+    }
+    }

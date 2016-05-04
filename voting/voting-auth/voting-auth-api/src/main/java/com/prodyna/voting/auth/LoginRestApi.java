@@ -2,6 +2,7 @@ package com.prodyna.voting.auth;
 
 import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.auth.user.UserService;
+import com.prodyna.voting.common.Reject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
@@ -31,16 +32,10 @@ public class LoginRestApi {
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public String login(@RequestBody final User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("Invalid login");
-        }
+        Reject.ifNull(user, "Invalid login data");
 
         Optional<User> dbUser = userService.findUserByUserNameAndPassword(user.getUserName(), user.getPassword());
-
-        if (!dbUser.isPresent()) {
-            log.debug("Invalid login for user: " + user);
-            throw new IllegalArgumentException("Invalid login");
-        }
+        Reject.ifAbsent(dbUser, "Invalid credentials");
 
         User foundUser = dbUser.get();
 

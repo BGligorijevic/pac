@@ -118,20 +118,41 @@ public class PollServiceImplTest {
         pollService.deletePoll(POLL_ID, buildNormalUser(USER_ID_1));
     }
 
+    /**
+     * Test for {@link PollService#createPoll(Poll)}.
+     */
     @Test
     public void pollIsCreated() {
-        Poll poll = buildPoll("Which is favourite color?", buildNormalUser(USER_ID_1));
+        Poll poll = buildPoll("Which is your favourite color?", buildNormalUser(USER_ID_1));
         assertTrue(poll.get_id() == null);
 
-        when(pollRepository.save(poll)).thenReturn(poll);
+        when(pollRepository.insert(poll)).thenReturn(poll);
 
         pollService.createPoll(poll);
-        verify(pollRepository).save(poll);
+        verify(pollRepository).insert(poll);
     }
 
+    /**
+     * Test for {@link PollService#createPoll(Poll)}.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void pollIsNotCreatedForNullInput() {
         pollService.createPoll(null);
+    }
+
+    /**
+     * Test for {@link PollService#editPoll(Poll, User)}.
+     */
+    @Test
+    public void pollIsEdited() {
+        Poll poll = buildPoll("123456", "Which is your favourite color?", buildNormalUser(USER_ID_1));
+
+        when(pollRepository.findOne(poll.get_id())).thenReturn(poll);
+        when(pollRepository.save(poll)).thenReturn(poll);
+
+        pollService.editPoll(poll, buildUser(true, USER_ADMIN_ID));
+
+        verify(pollRepository).save(poll);
     }
 
     private Poll buildPoll(String id, String title, User author) {

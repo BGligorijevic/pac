@@ -68,14 +68,14 @@ public class PollIT {
     @Test
     public void correct_poll_is_returned() {
         $.given_a_logged_in_user(TestUser.USER_1);
-        $.given_the_polls(TestPoll.values());
+        $.given_the_polls(TestPoll.testPolls());
         $.when_get_poll_request_with_id_is_sent(TestPoll.CAR.get_id());
         $.then_exactly_poll_with_id_is_returned(TestPoll.CAR.get_id());
     }
 
     @Test
     public void get_poll_forbidden_when_user_is_not_authenticated() {
-        $.given_the_polls(TestPoll.values());
+        $.given_the_polls(TestPoll.testPolls());
         $.when_get_poll_request_with_id_is_sent("12345");
         $.then_the_http_status_unauthorized_is_returned();
     }
@@ -83,15 +83,15 @@ public class PollIT {
     @Test
     public void delete_poll_succeeds_if_admin() {
         $.given_a_logged_in_user(TestUser.ADMIN_1);
-        $.given_the_polls(TestPoll.values());
+        $.given_the_polls(TestPoll.testPolls());
         $.when_delete_poll_request_with_id_is_sent(TestPoll.ICE_CREAM.get_id());
-        $.then_N_polls_exist(TestPoll.values().length - 1);
+        $.then_N_polls_exist(TestPoll.testPolls().length - 1);
     }
 
     @Test
     public void delete_poll_fails_if_not_admin_and_not_his_own_poll() {
         $.given_a_logged_in_user(TestUser.USER_1);
-        $.given_the_polls(TestPoll.values());
+        $.given_the_polls(TestPoll.testPolls());
         $.when_delete_poll_request_with_id_is_sent(TestPoll.CAR.get_id());
         $.then_no_poll_is_deleted();
     }
@@ -99,16 +99,27 @@ public class PollIT {
     @Test
     public void delete_poll_succeeds_if_his_own_poll() {
         $.given_a_logged_in_user(TestUser.USER_1);
-        $.given_the_polls(TestPoll.values());
+        $.given_the_polls(TestPoll.testPolls());
         $.when_delete_poll_request_with_id_is_sent(TestPoll.OS.get_id());
-        $.then_N_polls_exist(TestPoll.values().length - 1);
+        $.then_N_polls_exist(TestPoll.testPolls().length - 1);
     }
 
     @Test
-    public void create_vote_succeeds() {
+    public void create_poll_succeeds() {
         $.given_a_logged_in_user(TestUser.USER_2);
         $.given_the_polls(TestPoll.OS);
         $.when_create_poll_request_is_sent(TestPoll.ICE_CREAM);
         $.then_N_polls_exist(2);
+    }
+
+    @Test
+    public void edit_poll_succeeds() {
+        $.given_a_logged_in_user(TestUser.USER_1);
+        $.given_the_polls(TestPoll.testPolls());
+        $.when_edit_poll_request_is_sent(TestPoll.CHANGED_ICE_CREAM);
+        $.then_N_polls_exist(TestPoll.testPolls().length);
+
+        $.when_get_poll_request_with_id_is_sent(TestPoll.ICE_CREAM.get_id());
+        $.then_poll_has_correct_data(TestPoll.CHANGED_ICE_CREAM);
     }
 }

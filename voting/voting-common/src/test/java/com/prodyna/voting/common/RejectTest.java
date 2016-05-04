@@ -4,10 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RunWith(PowerMockRunner.class)
 public class RejectTest {
@@ -73,5 +70,21 @@ public class RejectTest {
         list.add("Bla");
         list.add("Blablabla");
         Reject.ifLessElementsThan(list, 2, "List must have at least 2 elements!");
+    }
+
+    /**
+     * Test for {@link Reject#ifAbsent(Optional, String)}.
+     */
+    @Test
+    public void doesNotRejectPresentOptional() {
+        Reject.ifAbsent(Optional.of(new Date()), "Optional should not be absent.");
+    }
+
+    /**
+     * Test for {@link Reject#ifAbsent(Optional, String)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void rejectsEmptyOptional() {
+        Reject.ifAbsent(Optional.empty(), "Optional should not be absent.");
     }
 }
