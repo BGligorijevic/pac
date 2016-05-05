@@ -68,14 +68,14 @@ public class PollIT {
     @Test
     public void correct_poll_is_returned() {
         $.given_a_logged_in_user(USER_1);
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_get_poll_request_with_id_is_sent(CAR.get_id());
         $.then_exactly_poll_with_id_is_returned(CAR.get_id());
     }
 
     @Test
     public void get_poll_forbidden_when_user_is_not_authenticated() {
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_get_poll_request_with_id_is_sent(CAR.get_id());
         $.then_the_http_status_unauthorized_is_returned();
     }
@@ -83,15 +83,15 @@ public class PollIT {
     @Test
     public void delete_poll_succeeds_if_admin() {
         $.given_a_logged_in_user(ADMIN_1);
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_delete_poll_request_with_id_is_sent(ICE_CREAM.get_id());
-        $.then_N_polls_exist(ALL.length - 1);
+        $.then_N_polls_exist(ALL_POLLS.length - 1);
     }
 
     @Test
     public void delete_poll_fails_if_not_admin_and_not_his_own_poll() {
         $.given_a_logged_in_user(USER_1);
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_delete_poll_request_with_id_is_sent(CAR.get_id());
         $.then_no_poll_is_deleted();
     }
@@ -99,9 +99,9 @@ public class PollIT {
     @Test
     public void delete_poll_succeeds_if_his_own_poll() {
         $.given_a_logged_in_user(USER_1);
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_delete_poll_request_with_id_is_sent(OS.get_id());
-        $.then_N_polls_exist(ALL.length - 1);
+        $.then_N_polls_exist(ALL_POLLS.length - 1);
     }
 
     @Test
@@ -115,9 +115,9 @@ public class PollIT {
     @Test
     public void edit_poll_succeeds() {
         $.given_a_logged_in_user(USER_1);
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_edit_poll_request_is_sent(CHANGED_ICE_CREAM);
-        $.then_N_polls_exist(ALL.length);
+        $.then_N_polls_exist(ALL_POLLS.length);
 
         $.when_get_poll_request_with_id_is_sent(ICE_CREAM.get_id());
         $.then_poll_has_correct_data(CHANGED_ICE_CREAM);
@@ -126,7 +126,7 @@ public class PollIT {
     @Test
     public void edit_poll_fails_if_not_admin_and_not_his_own_poll() {
         $.given_a_logged_in_user(USER_2);
-        $.given_the_polls(ALL);
+        $.given_the_polls(ALL_POLLS);
         $.when_edit_poll_request_is_sent(CHANGED_ICE_CREAM);
         $.then_no_poll_is_edited();
     }

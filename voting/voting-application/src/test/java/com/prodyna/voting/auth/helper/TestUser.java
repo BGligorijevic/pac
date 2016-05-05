@@ -30,4 +30,6 @@ public enum TestUser {
 
         return user;
     }
+
+    public static final TestUser[] ALL_USERS = new TestUser[]{USER_1, USER_2, ADMIN_1};
 }

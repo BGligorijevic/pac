@@ -51,5 +51,5 @@ public enum TestPoll {
     /**
      * All regular polls for testing. Special ones excluded.
      */
-    public static final TestPoll[] ALL = new TestPoll[]{ICE_CREAM, OS, CAR};
+    public static final TestPoll[] ALL_POLLS = new TestPoll[]{ICE_CREAM, OS, CAR};
 }
