@@ -1,8 +1,5 @@
 package com.prodyna.voting.poll.helper;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.auth.user.UserRepository;
@@ -38,15 +35,6 @@ public class PollTestHelper {
         URL baseUrl = new URL("http://localhost:" + port + "/api/polls");
         getAllPollsUrl = baseUrl.toString();
         this.template = new RestTemplate();
-
-        ObjectMapper om = new ObjectMapper();
-        // disable auto detection
-        om.disable(MapperFeature.AUTO_DETECT_CREATORS,
-                MapperFeature.AUTO_DETECT_FIELDS,
-                MapperFeature.AUTO_DETECT_GETTERS,
-                MapperFeature.AUTO_DETECT_IS_GETTERS);
-        om.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
 
         loginHelper = new LoginITHelper(port, userRepository);
     }
