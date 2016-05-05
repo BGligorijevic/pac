@@ -144,7 +144,7 @@ public class PollServiceImplTest {
      * Test for {@link PollService#editPoll(Poll, User)}.
      */
     @Test
-    public void pollIsEdited() {
+    public void pollIsEditedIfAdmin() {
         Poll poll = buildPoll("123456", "Which is your favourite color?", buildNormalUser(USER_ID_1));
 
         when(pollRepository.findOne(poll.get_id())).thenReturn(poll);
@@ -153,6 +153,16 @@ public class PollServiceImplTest {
         pollService.editPoll(poll, buildUser(true, USER_ADMIN_ID));
 
         verify(pollRepository).save(poll);
+    }
+
+    /**
+     * Test for {@link PollService#editPoll(Poll, User)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void pollCannotBeEditedIfNotAdminAndNotHisOwnPoll() {
+        Poll poll = buildPoll("123456", "Which is your favourite color?", buildNormalUser(USER_ID_1));
+
+        pollService.editPoll(poll, buildNormalUser(USER_ID_2));
     }
 
     private Poll buildPoll(String id, String title, User author) {

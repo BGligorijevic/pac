@@ -48,13 +48,8 @@ public enum TestPoll {
         return poll;
     }
 
-    public static TestPoll[] testPolls() {
-        TestPoll[] testPolls = new TestPoll[3];
-
-        testPolls[0] = ICE_CREAM;
-        testPolls[1] = OS;
-        testPolls[2] = CAR;
-
-        return testPolls;
-    }
-    }
+    /**
+     * All regular polls for testing. Special ones excluded.
+     */
+    public static final TestPoll[] ALL = new TestPoll[]{ICE_CREAM, OS, CAR};
+}

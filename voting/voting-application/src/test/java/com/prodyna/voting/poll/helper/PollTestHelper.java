@@ -118,6 +118,10 @@ public class PollTestHelper {
         assertTrue(forbiddenReturned == true);
     }
 
+    public void then_no_poll_is_edited() {
+        assertTrue(forbiddenReturned == true);
+    }
+
     public void then_N_polls_exist(int n) {
         when_get_all_polls_request_is_sent();
         then_exactly_N_polls_are_returned(n);

@@ -68,7 +68,7 @@ public class PollRestApi {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     private void handleInternalError(final Exception exception) {
-        log.error("Generic exception occured.", exception);
+        log.error("Generic exception occurred.", exception);
     }
 
     private User userFromRequest(HttpServletRequest request) {
