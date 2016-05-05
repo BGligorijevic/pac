@@ -43,5 +43,6 @@ public enum RestResources {
 
     public static class UrlPaths {
         public static final String POLLS_URL = "/api/polls";
+        public static final String VOTE_URL = "/api/votes";
     }
 }

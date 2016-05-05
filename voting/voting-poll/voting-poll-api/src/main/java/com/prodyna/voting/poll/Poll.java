@@ -1,6 +1,5 @@
 package com.prodyna.voting.poll;
 
-import com.prodyna.voting.auth.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +19,7 @@ public class Poll {
     private String description;
 
     @NotNull
-    private User author;
+    private String authorId;
 
     @NotNull
     private Date changeDate;

@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * Voting Rest controller handling all incoming Rest requests.
+ * Poll Rest controller handling all incoming Rest requests.
  */
 @RestController
 @RequestMapping(value = RestResources.UrlPaths.POLLS_URL)
@@ -21,26 +21,26 @@ import java.util.Optional;
 public class PollRestApi {
 
     @Autowired
-    private PollService votingService;
+    private PollService pollService;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Poll> getAllPolls() {
-        return votingService.getAllPolls();
+        return pollService.getAllPolls();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public Poll createPoll(@RequestBody Poll poll) {
-        return votingService.createPoll(poll);
+        return pollService.createPoll(poll);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     public Poll editPoll(@RequestBody Poll poll, HttpServletRequest request) {
-        return votingService.editPoll(poll, userFromRequest(request));
+        return pollService.editPoll(poll, userFromRequest(request));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Poll getPoll(@PathVariable String id) {
-        Optional<Poll> poll = votingService.getPoll(id);
+        Optional<Poll> poll = pollService.getPoll(id);
         if (!poll.isPresent()) {
             throw new NoSuchElementException();
         }
@@ -50,7 +50,7 @@ public class PollRestApi {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePoll(@PathVariable String id, HttpServletRequest request) {
-        votingService.deletePoll(id, userFromRequest(request));
+        pollService.deletePoll(id, userFromRequest(request));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)

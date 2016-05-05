@@ -168,7 +168,7 @@ public class PollServiceImplTest {
     private Poll buildPoll(String id, String title, User author) {
         Poll poll = new Poll();
 
-        poll.setAuthor(author);
+        poll.setAuthorId(author.getUserId());
         poll.set_id(id);
         poll.setTitle(title);
         poll.setDescription(title);

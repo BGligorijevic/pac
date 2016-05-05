@@ -87,4 +87,20 @@ public class RejectTest {
     public void rejectsEmptyOptional() {
         Reject.ifAbsent(Optional.empty(), "Optional should not be absent.");
     }
+
+    /**
+     * Test for {@link Reject#iF(boolean, String)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void rejectsIfExpressionIsSatisfied() {
+        Reject.iF(1 == 1, "Exception is thrown here");
+    }
+
+    /**
+     * Test for {@link Reject#iF(boolean, String)}.
+     */
+    @Test
+    public void doesNotRejectIfExpressionNotSatisfied() {
+        Reject.iF(1 == 2, "Exception is not thrown here");
+    }
 }

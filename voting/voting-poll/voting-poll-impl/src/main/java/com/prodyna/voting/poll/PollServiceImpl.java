@@ -25,11 +25,9 @@ public class PollServiceImpl implements PollService {
             poll.setChangeDate(new Date());
         }
 
-        for (PollOption pollOption : poll.getPollOptions()) {
-            if (pollOption.get_id() == null) {
-                pollOption.set_id(UUID.randomUUID().toString());
-            }
-        }
+        poll.getPollOptions().stream().filter(pollOption -> pollOption.get_id() == null).forEach(pollOption -> {
+            pollOption.set_id(UUID.randomUUID().toString());
+        });
 
         return pollRepository.insert(poll);
     }
@@ -83,7 +81,7 @@ public class PollServiceImpl implements PollService {
     }
 
     private boolean pollBelongsToUser(User user, Poll poll) {
-        return poll.getAuthor().getUserId().equals(user.getUserId());
+        return poll.getAuthorId().equals(user.getUserId());
     }
 
     private void validatePoll(Poll poll) {

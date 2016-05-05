@@ -1,11 +1,14 @@
 package com.prodyna.voting.common;
 
+import lombok.extern.log4j.Log4j;
+
 import java.util.Collection;
 import java.util.Optional;
 
 /**
  * Utility function to make it easier to work with null checks.
  */
+@Log4j
 public final class Reject {
 
     /**
@@ -21,7 +24,21 @@ public final class Reject {
      * @param description Text to add to exception
      */
     public static void always(String description) {
+        log.error(description);
         throw new IllegalArgumentException(description);
+    }
+
+    /**
+     * Throws a {@link IllegalArgumentException} if the expression to test is true.
+     * Wrapper method for such exception.
+     *
+     * @param expressionToTest Flag to examine
+     * @param description Text to add to exception
+     */
+    public static void iF(boolean expressionToTest, String description) {
+        if (expressionToTest) {
+            always(description);
+        }
     }
 
     /**
