@@ -8,29 +8,57 @@ import java.util.Optional;
  */
 public final class Reject {
 
+    /**
+     * You shall not pass!
+     */
     private Reject() {
     }
 
+    /**
+     * Unconditionally throws a {@link IllegalArgumentException}.
+     * Wrapper method for such exception.
+     *
+     * @param description Text to add to exception
+     */
     public static void always(String description) {
         throw new IllegalArgumentException(description);
     }
 
+    /**
+     * Throws an {@link IllegalArgumentException} if passed input is null.
+     *
+     * @param object      Object to test if null
+     * @param description Text to add to exception
+     */
     public static void ifNull(Object object, String description) {
         if (object == null) {
             always(description);
         }
     }
 
+    /**
+     * Throws an {@link IllegalArgumentException} if passed Optional is empty.
+     *
+     * @param optional    Optional object to test if null
+     * @param description Text to add to exception
+     */
     public static <T> void ifAbsent(Optional<T> optional, String description) {
         if (!optional.isPresent()) {
             always(description);
         }
     }
 
-    public static void ifLessElementsThan(Collection collection, int n, String description) {
+    /**
+     * Throws an {@link IllegalArgumentException} if passed collection is null or has number of elements less than specified.
+     *
+     * @param collection       Collection to test
+     * @param numberOfElements Number of elements to require in the collection
+     * @param description      Text to add to exception
+     */
+    public static void ifLessElementsThan(Collection collection, int numberOfElements, String description) {
         ifNull(collection, description);
 
-        if (collection.size() < n) {
+        if (collection.size() < numberOfElements) {
             always(description);
         }
     }

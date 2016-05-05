@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.auth.user.UserRepository;
+import com.prodyna.voting.common.Nothing;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollRepository;
 import org.springframework.http.*;
@@ -157,7 +158,7 @@ public class PollTestHelper {
     }
 
     public void given_no_existing_polls() {
-        // nothing happens here
+        Nothing.onPurpose();
     }
 
     public void then_no_polls_are_returned() {
