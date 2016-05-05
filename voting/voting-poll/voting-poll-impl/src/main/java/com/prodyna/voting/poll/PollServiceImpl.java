@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PollServiceImpl implements PollService {
@@ -22,6 +23,12 @@ public class PollServiceImpl implements PollService {
 
         if (poll.getChangeDate() == null) {
             poll.setChangeDate(new Date());
+        }
+
+        for (PollOption pollOption : poll.getPollOptions()) {
+            if (pollOption.get_id() == null) {
+                pollOption.set_id(UUID.randomUUID().toString());
+            }
         }
 
         return pollRepository.insert(poll);
@@ -65,6 +72,14 @@ public class PollServiceImpl implements PollService {
             Reject.always("User is not allowed to delete this poll.");
         }
         pollRepository.delete(poll);
+    }
+
+    @Override
+    public void deleteAllPolls(User user) {
+        if (!Role.isUserAdmin(user)) {
+            Reject.always("User is not allowed to delete all polls.");
+        }
+        pollRepository.deleteAll();
     }
 
     private boolean pollBelongsToUser(User user, Poll poll) {

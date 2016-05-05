@@ -50,7 +50,15 @@ public interface PollService {
      * @param pollId
      * @param user
      * @throws IllegalArgumentException if poll cannot be found or
-     *                                  user has no permission to delete the poll.
+     *                                  user has no permission to delete the poll
      */
     void deletePoll(String pollId, User user);
+
+    /**
+     * Deletes all polls.
+     *
+     * @param user User performing the call
+     * @throws IllegalArgumentException if user has no permission to delete the polls
+     */
+    void deleteAllPolls(User user);
 }

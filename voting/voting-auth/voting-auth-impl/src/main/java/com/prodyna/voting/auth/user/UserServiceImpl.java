@@ -1,5 +1,6 @@
 package com.prodyna.voting.auth.user;
 
+import com.prodyna.voting.common.Reject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(final User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public void deleteAllUsers(User user) {
+        if (!Role.isUserAdmin(user)) {
+            Reject.always("No permission to delete all users!");
+        }
+        userRepository.deleteAll();
     }
 }

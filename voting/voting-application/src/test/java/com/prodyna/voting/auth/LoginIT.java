@@ -2,7 +2,7 @@ package com.prodyna.voting.auth;
 
 import com.prodyna.voting.Application;
 import com.prodyna.voting.auth.helper.LoginITHelper;
-import com.prodyna.voting.auth.user.UserRepository;
+import com.prodyna.voting.auth.user.UserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.net.MalformedURLException;
 
-import static com.prodyna.voting.auth.helper.TestUser.*;
+import static com.prodyna.voting.auth.helper.TestUser.ALL_USERS;
+import static com.prodyna.voting.auth.helper.TestUser.USER_1;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -25,7 +26,7 @@ import static com.prodyna.voting.auth.helper.TestUser.*;
 public class LoginIT {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Value("${local.server.port}")
     private int port;
@@ -33,7 +34,7 @@ public class LoginIT {
 
     @Before
     public void setUp() throws MalformedURLException {
-        $ = new LoginITHelper(port, userRepository);
+        $ = new LoginITHelper(port, userService);
     }
 
     @Test

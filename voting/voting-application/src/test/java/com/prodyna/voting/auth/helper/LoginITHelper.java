@@ -1,7 +1,7 @@
 package com.prodyna.voting.auth.helper;
 
 import com.prodyna.voting.auth.user.User;
-import com.prodyna.voting.auth.user.UserRepository;
+import com.prodyna.voting.auth.user.UserService;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -16,11 +16,11 @@ public class LoginITHelper {
 
     private final String base;
     private final RestTemplate template;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private ResponseEntity<String> response;
 
-    public LoginITHelper(final int port, final UserRepository userRepository) throws MalformedURLException {
-        this.userRepository = userRepository;
+    public LoginITHelper(final int port, final UserService userService) throws MalformedURLException {
+        this.userService = userService;
         URL baseUrl = new URL("http://localhost:" + port + "/user");
         base = baseUrl.toString();
         template = new TestRestTemplate();
@@ -28,7 +28,7 @@ public class LoginITHelper {
 
     public void given_existing_users(TestUser... testUsers) {
         for (TestUser testUser : testUsers) {
-            userRepository.save(testUser.toUserObject());
+            userService.saveUser(testUser.toUserObject());
         }
     }
 
@@ -72,6 +72,6 @@ public class LoginITHelper {
     }
 
     public void cleanup() {
-        userRepository.deleteAll();
+        userService.deleteAllUsers(TestUser.ADMIN_1.toUserObject());
     }
 }

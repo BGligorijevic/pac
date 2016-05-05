@@ -2,10 +2,10 @@ package com.prodyna.voting.poll.helper;
 
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.auth.helper.TestUser;
-import com.prodyna.voting.auth.user.UserRepository;
+import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.common.Nothing;
 import com.prodyna.voting.poll.Poll;
-import com.prodyna.voting.poll.PollRepository;
+import com.prodyna.voting.poll.PollService;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +21,7 @@ public class PollTestHelper {
 
     private final String getAllPollsUrl;
     private final RestTemplate template;
-    private final PollRepository pollRepository;
+    private final PollService pollService;
     private final LoginITHelper loginHelper;
     private String token;
 
@@ -29,14 +29,14 @@ public class PollTestHelper {
     private ResponseEntity<Poll> onePollResponse;
     private boolean forbiddenReturned;
 
-    public PollTestHelper(int port, PollRepository pollRepository,
-                          UserRepository userRepository) throws MalformedURLException {
-        this.pollRepository = pollRepository;
+    public PollTestHelper(int port, PollService pollService,
+                          UserService userService) throws MalformedURLException {
+        this.pollService = pollService;
         URL baseUrl = new URL("http://localhost:" + port + "/api/polls");
         getAllPollsUrl = baseUrl.toString();
         this.template = new RestTemplate();
 
-        loginHelper = new LoginITHelper(port, userRepository);
+        loginHelper = new LoginITHelper(port, userService);
     }
 
     public void given_a_logged_in_user(TestUser loggedInTestUser) {
@@ -47,7 +47,7 @@ public class PollTestHelper {
 
     public void given_the_polls(TestPoll... testPolls) {
         for (TestPoll testPoll : testPolls) {
-            pollRepository.save(testPoll.toPollObject());
+            pollService.createPoll(testPoll.toPollObject());
         }
     }
 
@@ -137,7 +137,7 @@ public class PollTestHelper {
     }
 
     public void cleanup() {
-        pollRepository.deleteAll();
+        pollService.deleteAllPolls(TestUser.ADMIN_1.toUserObject());
         loginHelper.cleanup();
         forbiddenReturned = false;
         onePollResponse = null;

@@ -1,7 +1,7 @@
 package com.prodyna.voting.poll;
 
 import com.prodyna.voting.Application;
-import com.prodyna.voting.auth.user.UserRepository;
+import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.poll.helper.PollTestHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -28,13 +28,14 @@ public class PollIT {
     private PollTestHelper $;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
     @Autowired
-    private PollRepository pollRepository;
+    private PollService pollService;
 
     @Before
     public void setUp() throws Exception {
-        $ = new PollTestHelper(tomcatPort, pollRepository, userRepository);
+        $ = new PollTestHelper(tomcatPort, pollService, userService);
     }
 
     @After

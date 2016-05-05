@@ -25,6 +25,7 @@
         <module>voting-auth</module>
         <module>voting-poll</module>
         <module>voting-common</module>
+        <module>voting-vote</module>
     </modules>
 
     <dependencies>

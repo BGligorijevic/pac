@@ -15,17 +15,4 @@
         <module>voting-poll-api</module>
         <module>voting-poll-impl</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.prodyna.voting</groupId>
-            <artifactId>voting-auth-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.prodyna.voting</groupId>
-            <artifactId>voting-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 </project>
