@@ -2,28 +2,36 @@ package com.prodyna.voting.auth.helper;
 
 import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.auth.user.UserService;
+import com.prodyna.voting.common.testing.VotingTestHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 
-public class LoginITHelper {
+@Component
+public class LoginITHelper implements VotingTestHelper {
 
-    private final String base;
-    private final RestTemplate template;
-    private final UserService userService;
+    private String baseUrl;
+    private RestTemplate template = new TestRestTemplate();
+
+    @Autowired
+    private UserService userService;
+
     private ResponseEntity<String> response;
 
-    public LoginITHelper(final int port, final UserService userService) throws MalformedURLException {
-        this.userService = userService;
-        URL baseUrl = new URL("http://localhost:" + port + "/user");
-        base = baseUrl.toString();
-        template = new TestRestTemplate();
+    @Override
+    public void setTestingPort(int port) {
+        try {
+            baseUrl = new URL("http://localhost:" + port + "/user").toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void given_existing_users(TestUser... testUsers) {
@@ -42,7 +50,7 @@ public class LoginITHelper {
 
         HttpEntity<User> entity = new HttpEntity<>(knownUser);
 
-        response = template.postForEntity(base + "/login", entity, String.class);
+        response = template.postForEntity(baseUrl + "/login", entity, String.class);
     }
 
     public void when_the_wrong_login_credentials_are_sent() {
@@ -55,7 +63,7 @@ public class LoginITHelper {
 
         HttpEntity<User> entity = new HttpEntity<>(unknownUser);
 
-        response = template.postForEntity(base + "/login", entity, String.class);
+        response = template.postForEntity(baseUrl + "/login", entity, String.class);
     }
 
     public String then_the_access_token_is_returned() {

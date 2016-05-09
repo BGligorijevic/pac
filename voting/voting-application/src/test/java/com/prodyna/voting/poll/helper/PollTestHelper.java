@@ -2,41 +2,49 @@ package com.prodyna.voting.poll.helper;
 
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.auth.helper.TestUser;
-import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.common.Nothing;
+import com.prodyna.voting.common.testing.VotingTestHelper;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public class PollTestHelper {
+@Component
+public class PollTestHelper implements VotingTestHelper {
 
-    private final String getAllPollsUrl;
-    private final RestTemplate template;
-    private final PollService pollService;
-    private final LoginITHelper loginHelper;
+    @Autowired
+    private PollService pollService;
+
+    @Autowired
+    private LoginITHelper loginHelper;
+
+    private int port;
+    private String getAllPollsUrl;
+    private final RestTemplate template = new RestTemplate();
     private String token;
 
     private ResponseEntity<Poll[]> allPollsResponse;
     private ResponseEntity<Poll> onePollResponse;
     private boolean forbiddenReturned;
 
-    public PollTestHelper(int port, PollService pollService,
-                          UserService userService) throws MalformedURLException {
-        this.pollService = pollService;
-        URL baseUrl = new URL("http://localhost:" + port + "/api/polls");
-        getAllPollsUrl = baseUrl.toString();
-        this.template = new RestTemplate();
-
-        loginHelper = new LoginITHelper(port, userService);
+    @Override
+    public void setTestingPort(int port) {
+        try {
+            loginHelper.setTestingPort(port);
+            URL baseUrl = new URL("http://localhost:" + port + "/api/polls");
+            getAllPollsUrl = baseUrl.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void given_a_logged_in_user(TestUser loggedInTestUser) {

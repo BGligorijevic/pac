@@ -2,7 +2,7 @@ package com.prodyna.voting.auth;
 
 import com.prodyna.voting.Application;
 import com.prodyna.voting.auth.helper.LoginITHelper;
-import com.prodyna.voting.auth.user.UserService;
+import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,18 +23,17 @@ import static com.prodyna.voting.auth.helper.TestUser.USER_1;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class LoginIT {
-
-    @Autowired
-    private UserService userService;
+public class LoginIT implements VotingIntegrationTest {
 
     @Value("${local.server.port}")
-    private int port;
+    private int tomcatPort;
+
+    @Autowired
     private LoginITHelper $;
 
     @Before
     public void setUp() throws MalformedURLException {
-        $ = new LoginITHelper(port, userService);
+        $.setTestingPort(tomcatPort);
     }
 
     @Test

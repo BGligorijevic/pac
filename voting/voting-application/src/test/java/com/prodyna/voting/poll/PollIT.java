@@ -1,7 +1,7 @@
 package com.prodyna.voting.poll;
 
 import com.prodyna.voting.Application;
-import com.prodyna.voting.auth.user.UserService;
+import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import com.prodyna.voting.poll.helper.PollTestHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -21,21 +21,17 @@ import static com.prodyna.voting.poll.helper.TestPoll.*;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class PollIT {
+public class PollIT implements VotingIntegrationTest {
 
     @Value("${local.server.port}")
     private int tomcatPort;
+
+    @Autowired
     private PollTestHelper $;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PollService pollService;
 
     @Before
     public void setUp() throws Exception {
-        $ = new PollTestHelper(tomcatPort, pollService, userService);
+        $.setTestingPort(tomcatPort);
     }
 
     @After
