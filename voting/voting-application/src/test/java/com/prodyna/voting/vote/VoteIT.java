@@ -29,12 +29,14 @@ public class VoteIT implements VotingIntegrationTest {
     private int tomcatPort;
 
     @Before
+    @Override
     public void setUp() throws Exception {
         $.setTestingPort(tomcatPort);
     }
 
     @After
-    public void tearDown() {
+    @Override
+    public void cleanUp() {
         $.cleanup();
     }
 

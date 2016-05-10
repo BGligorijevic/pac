@@ -5,7 +5,15 @@ package com.prodyna.voting.common.testing;
  */
 public interface VotingIntegrationTest {
 
+    /**
+     * Use this method to set up the integration test.
+     *
+     * @throws Exception
+     */
     void setUp() throws Exception;
 
-    void tearDown();
+    /**
+     * Use this method to clean up resources after integration test.
+     */
+    void cleanUp();
 }

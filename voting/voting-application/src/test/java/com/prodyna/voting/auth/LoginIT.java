@@ -32,6 +32,7 @@ public class LoginIT implements VotingIntegrationTest {
     private LoginITHelper $;
 
     @Before
+    @Override
     public void setUp() throws MalformedURLException {
         $.setTestingPort(tomcatPort);
     }
@@ -51,7 +52,8 @@ public class LoginIT implements VotingIntegrationTest {
     }
 
     @After
-    public void tearDown() {
+    @Override
+    public void cleanUp() {
         $.cleanup();
     }
 }
