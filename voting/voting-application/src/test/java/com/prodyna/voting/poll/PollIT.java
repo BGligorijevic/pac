@@ -43,7 +43,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void all_polls_are_returned() throws Exception {
-        $.given_a_logged_in_user(USER_1);
+        $.given_a_logged_in_existing_user(USER_1);
         $.given_the_polls(CAR, ICE_CREAM);
         $.when_get_all_polls_request_is_sent();
         $.then_exactly_N_polls_are_returned(2);
@@ -58,7 +58,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void no_polls_are_returned_when_no_polls_exist() throws Exception {
-        $.given_a_logged_in_user(USER_1);
+        $.given_a_logged_in_existing_user(USER_1);
         $.given_no_existing_polls();
         $.when_get_all_polls_request_is_sent();
         $.then_no_polls_are_returned();
@@ -66,7 +66,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void correct_poll_is_returned() {
-        $.given_a_logged_in_user(USER_1);
+        $.given_a_logged_in_existing_user(USER_1);
         $.given_the_polls(ALL_POLLS);
         $.when_get_poll_request_with_id_is_sent(CAR.get_id());
         $.then_exactly_poll_with_id_is_returned(CAR.get_id());
@@ -81,7 +81,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void delete_poll_succeeds_if_admin() {
-        $.given_a_logged_in_user(ADMIN_1);
+        $.given_a_logged_in_existing_user(ADMIN_1);
         $.given_the_polls(ALL_POLLS);
         $.when_delete_poll_request_with_id_is_sent(ICE_CREAM.get_id());
         $.then_N_polls_exist(ALL_POLLS.length - 1);
@@ -89,7 +89,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void delete_poll_fails_if_not_admin_and_not_his_own_poll() {
-        $.given_a_logged_in_user(USER_1);
+        $.given_a_logged_in_existing_user(USER_1);
         $.given_the_polls(ALL_POLLS);
         $.when_delete_poll_request_with_id_is_sent(CAR.get_id());
         $.then_no_poll_is_deleted();
@@ -97,7 +97,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void delete_poll_succeeds_if_his_own_poll() {
-        $.given_a_logged_in_user(USER_1);
+        $.given_a_logged_in_existing_user(USER_1);
         $.given_the_polls(ALL_POLLS);
         $.when_delete_poll_request_with_id_is_sent(OS.get_id());
         $.then_N_polls_exist(ALL_POLLS.length - 1);
@@ -105,7 +105,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void create_poll_succeeds() {
-        $.given_a_logged_in_user(USER_2);
+        $.given_a_logged_in_existing_user(USER_2);
         $.given_the_polls(OS);
         $.when_create_poll_request_is_sent(ICE_CREAM);
         $.then_N_polls_exist(2);
@@ -113,7 +113,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void edit_poll_succeeds() {
-        $.given_a_logged_in_user(USER_1);
+        $.given_a_logged_in_existing_user(USER_1);
         $.given_the_polls(ALL_POLLS);
         $.when_edit_poll_request_is_sent(CHANGED_ICE_CREAM);
         $.then_N_polls_exist(ALL_POLLS.length);
@@ -124,7 +124,7 @@ public class PollIT implements VotingIntegrationTest {
 
     @Test
     public void edit_poll_fails_if_not_admin_and_not_his_own_poll() {
-        $.given_a_logged_in_user(USER_2);
+        $.given_a_logged_in_existing_user(USER_2);
         $.given_the_polls(ALL_POLLS);
         $.when_edit_poll_request_is_sent(CHANGED_ICE_CREAM);
         $.then_no_poll_is_edited();

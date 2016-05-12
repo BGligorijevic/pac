@@ -1,6 +1,5 @@
 package com.prodyna.voting.auth.filter;
 
-import com.prodyna.voting.auth.RestResources;
 import com.prodyna.voting.auth.user.Role;
 import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.common.Reject;
@@ -60,13 +59,6 @@ public class SecurityFilter extends GenericFilterBean {
             return;
         }
 
-        try {
-            checkRole(user.getRole(), request);
-        } catch (final Exception e) {
-            response.sendError(HttpStatus.FORBIDDEN.value());
-            return;
-        }
-
         request.setAttribute("user", user);
         chain.doFilter(req, res);
     }
@@ -88,12 +80,5 @@ public class SecurityFilter extends GenericFilterBean {
 
     private boolean noAuthToken(String authHeader) {
         return authHeader == null || !authHeader.startsWith("Bearer ");
-    }
-
-    private void checkRole(Role role, HttpServletRequest request) {
-        RestResources resource = RestResources.getForUrlAndPath(request.getRequestURI(), request.getMethod());
-        if (!resource.hasRole(role)) {
-            Reject.always("User does not have required role.");
-        }
     }
 }

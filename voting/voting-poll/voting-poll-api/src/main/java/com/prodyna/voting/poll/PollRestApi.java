@@ -1,6 +1,5 @@
 package com.prodyna.voting.poll;
 
-import com.prodyna.voting.auth.RestResources;
 import com.prodyna.voting.auth.user.User;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.util.Optional;
  * Poll Rest controller handling all incoming Rest requests.
  */
 @RestController
-@RequestMapping(value = RestResources.UrlPaths.POLLS_URL)
+@RequestMapping(value = "/api/polls")
 @Log4j
 public class PollRestApi {
 

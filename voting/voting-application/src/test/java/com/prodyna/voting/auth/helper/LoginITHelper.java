@@ -82,4 +82,11 @@ public class LoginITHelper implements VotingTestHelper {
     public void cleanup() {
         userService.deleteAllUsers(TestUser.ADMIN_1.toUserObject());
     }
+
+    public String given_a_logged_in_existing_user(TestUser loggedInTestUser) {
+        given_existing_users(TestUser.values());
+        when_the_correct_login_credentials_are_sent(loggedInTestUser);
+
+        return then_the_access_token_is_returned();
+    }
 }

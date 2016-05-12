@@ -1,7 +1,6 @@
 package com.prodyna.voting.vote;
 
 
-import com.prodyna.voting.auth.RestResources;
 import com.prodyna.voting.auth.user.User;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * Vote Rest controller handling all incoming Rest requests.
  */
 @RestController
-@RequestMapping(value = RestResources.UrlPaths.VOTE_URL)
+@RequestMapping(value = "/api/votes")
 @Log4j
 public class VoteRestApi {
 

@@ -37,7 +37,7 @@ public class SecurityFilterTest {
     @Test
     public void returnsUnauthorizedStatusForGetAllPost() throws IOException, ServletException {
         when(request.getMethod()).thenReturn(RequestMethod.GET.name());
-        when(request.getRequestURI()).thenReturn(RestResources.UrlPaths.POLLS_URL);
+        when(request.getRequestURI()).thenReturn("/api/polls");
 
         securityFilter.doFilter(request, response, chain);
         verify(response, times(1)).sendError(HttpStatus.UNAUTHORIZED.value());
@@ -47,7 +47,7 @@ public class SecurityFilterTest {
     @Test
     public void returnsUnauthorizedStatusForPollsWithPost() throws IOException, ServletException {
         when(request.getMethod()).thenReturn(RequestMethod.POST.name());
-        when(request.getRequestURI()).thenReturn(RestResources.UrlPaths.POLLS_URL);
+        when(request.getRequestURI()).thenReturn("/api/polls");
 
         securityFilter.doFilter(request, response, chain);
         verify(response, times(1)).sendError(HttpStatus.UNAUTHORIZED.value());

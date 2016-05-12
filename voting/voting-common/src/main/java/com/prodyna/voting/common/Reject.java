@@ -33,7 +33,7 @@ public final class Reject {
      * Wrapper method for such exception.
      *
      * @param expressionToTest Flag to examine
-     * @param description Text to add to exception
+     * @param description      Text to add to exception
      */
     public static void iF(boolean expressionToTest, String description) {
         if (expressionToTest) {
