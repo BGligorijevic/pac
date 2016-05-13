@@ -9,7 +9,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URL;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
@@ -17,22 +16,12 @@ import static org.junit.Assert.assertTrue;
 @Component
 public class LoginITHelper implements VotingTestHelper {
 
-    private String baseUrl;
+    private static final String LOGIN_REST_URL = "http://localhost:8888/user/login";
     private RestTemplate template = new TestRestTemplate();
 
     @Autowired
     private UserService userService;
-
     private ResponseEntity<String> response;
-
-    @Override
-    public void setTestingPort(int port) {
-        try {
-            baseUrl = new URL("http://localhost:" + port + "/user").toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void given_existing_users(TestUser... testUsers) {
         for (TestUser testUser : testUsers) {
@@ -50,7 +39,7 @@ public class LoginITHelper implements VotingTestHelper {
 
         HttpEntity<User> entity = new HttpEntity<>(knownUser);
 
-        response = template.postForEntity(baseUrl + "/login", entity, String.class);
+        response = template.postForEntity(LOGIN_REST_URL, entity, String.class);
     }
 
     public void when_the_wrong_login_credentials_are_sent() {
@@ -63,7 +52,7 @@ public class LoginITHelper implements VotingTestHelper {
 
         HttpEntity<User> entity = new HttpEntity<>(unknownUser);
 
-        response = template.postForEntity(baseUrl + "/login", entity, String.class);
+        response = template.postForEntity(LOGIN_REST_URL, entity, String.class);
     }
 
     public String then_the_access_token_is_returned() {

@@ -4,11 +4,9 @@ import com.prodyna.voting.Application;
 import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import com.prodyna.voting.poll.helper.PollTestHelper;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,20 +18,11 @@ import static com.prodyna.voting.poll.helper.TestPoll.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest({"server.port=0"})
+@IntegrationTest({"server.port=8888"})
 public class PollIT implements VotingIntegrationTest {
-
-    @Value("${local.server.port}")
-    private int tomcatPort;
 
     @Autowired
     private PollTestHelper $;
-
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        $.setTestingPort(tomcatPort);
-    }
 
     @After
     @Override

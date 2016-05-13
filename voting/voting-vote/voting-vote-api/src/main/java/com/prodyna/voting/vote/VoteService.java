@@ -27,7 +27,7 @@ public interface VoteService {
      * @throws IllegalArgumentException if user did not vote on this poll (administrator are always allowed)
      *                                  or poll cannot be found.
      */
-    VotingResults getPollResults(String pollId, User user);
+    VotingResults getVotingResults(String pollId, User user);
 
     /**
      * Returns all votes of the specified user.

@@ -10,11 +10,4 @@ public interface VotingTestHelper {
      * Example, remove all test users created during test run.
      */
     void cleanup();
-
-    /**
-     * This method should set the port used by Tomcat container run during integration tests.
-     *
-     * @param port Tomcat port, in Spring boot tests dynamically determined
-     */
-    void setTestingPort(int port);
 }

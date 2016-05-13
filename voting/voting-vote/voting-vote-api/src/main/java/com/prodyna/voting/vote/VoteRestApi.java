@@ -26,8 +26,8 @@ public class VoteRestApi {
     }
 
     @RequestMapping(value = "/{pollId}/results", method = RequestMethod.GET)
-    public void getPollResults(@PathVariable String pollId, HttpServletRequest request) {
-        voteService.getPollResults(pollId, userFromRequest(request));
+    public VotingResults getVotingResults(@PathVariable String pollId, HttpServletRequest request) {
+        return voteService.getVotingResults(pollId, userFromRequest(request));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)

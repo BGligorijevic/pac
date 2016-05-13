@@ -41,7 +41,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public VotingResults getPollResults(String pollId, User user) {
+    public VotingResults getVotingResults(String pollId, User user) {
         Reject.ifNull(pollId, "No poll id specified.");
         Reject.ifNull(user, "No user specified.");
         Reject.ifNull(user.getUserId(), "No user id specified.");

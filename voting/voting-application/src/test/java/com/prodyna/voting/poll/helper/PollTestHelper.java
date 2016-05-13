@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,24 +26,12 @@ public class PollTestHelper implements VotingTestHelper {
     @Autowired
     private LoginITHelper loginHelper;
 
-    private int port;
-    private String pollsUrl;
+    private static final String POLLS_REST_URL = "http://localhost:8888/api/polls";
     private final RestTemplate template = new RestTemplate();
     private String token;
-
     private ResponseEntity<Poll[]> allPollsResponse;
     private ResponseEntity<Poll> onePollResponse;
     private boolean forbiddenReturned;
-
-    @Override
-    public void setTestingPort(int port) {
-        try {
-            loginHelper.setTestingPort(port);
-            pollsUrl = new URL("http://localhost:" + port + "/api/polls").toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void given_a_logged_in_existing_user(TestUser loggedInTestUser) {
         token = loginHelper.given_a_logged_in_existing_user(loggedInTestUser);
@@ -58,7 +45,7 @@ public class PollTestHelper implements VotingTestHelper {
 
     public void when_get_all_polls_request_is_sent() {
         try {
-            allPollsResponse = template.exchange(pollsUrl, HttpMethod.GET, getHeader(), Poll[].class);
+            allPollsResponse = template.exchange(POLLS_REST_URL, HttpMethod.GET, getHeader(), Poll[].class);
         } catch (HttpClientErrorException e) {
             allPollsResponse = new ResponseEntity<>(e.getStatusCode());
         }
@@ -66,7 +53,7 @@ public class PollTestHelper implements VotingTestHelper {
 
     public void when_get_poll_request_with_id_is_sent(String id) {
         try {
-            onePollResponse = template.exchange(pollsUrl + "/" + id, HttpMethod.GET, getHeader(), Poll.class);
+            onePollResponse = template.exchange(POLLS_REST_URL + "/" + id, HttpMethod.GET, getHeader(), Poll.class);
         } catch (HttpClientErrorException e) {
             onePollResponse = new ResponseEntity<>(e.getStatusCode());
         }
@@ -74,7 +61,7 @@ public class PollTestHelper implements VotingTestHelper {
 
     public void when_delete_poll_request_with_id_is_sent(String id) {
         try {
-            template.exchange(pollsUrl + "/{id}", HttpMethod.DELETE, getHeader(), String.class, id);
+            template.exchange(POLLS_REST_URL + "/{id}", HttpMethod.DELETE, getHeader(), String.class, id);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
                 forbiddenReturned = true;
@@ -84,7 +71,7 @@ public class PollTestHelper implements VotingTestHelper {
 
     public void when_create_poll_request_is_sent(TestPoll testPoll) {
         try {
-            template.postForObject(pollsUrl, getPollEntity(testPoll), Poll.class);
+            template.postForObject(POLLS_REST_URL, getPollEntity(testPoll), Poll.class);
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
         }
@@ -92,7 +79,7 @@ public class PollTestHelper implements VotingTestHelper {
 
     public void when_edit_poll_request_is_sent(TestPoll testPoll) {
         try {
-            template.put(pollsUrl, getPollEntity(testPoll), Poll.class);
+            template.put(POLLS_REST_URL, getPollEntity(testPoll), Poll.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
                 forbiddenReturned = true;

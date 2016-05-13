@@ -71,7 +71,7 @@ public class VoteServiceImplTest {
     }
 
     /**
-     * Test for {@link VoteServiceImpl#getPollResults(String, User)}.
+     * Test for {@link VoteServiceImpl#getVotingResults(String, User)}.
      */
     @Test
     public void voteResultsAreReturnedProperly() {
@@ -82,7 +82,7 @@ public class VoteServiceImplTest {
         when(pollService.getPoll(carPoll.get_id())).thenReturn(Optional.of(carPoll));
         when(voteRepository.findByPollId(carPoll.get_id())).thenReturn(votes);
 
-        VotingResults pollResults = voteService.getPollResults(POLL_ID, user);
+        VotingResults pollResults = voteService.getVotingResults(POLL_ID, user);
         assertTrue(pollResults != null);
         assertTrue(pollResults.getPollId().equals(POLL_ID));
         assertTrue(pollResults.getVotingOptionResults() != null);
