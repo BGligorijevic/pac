@@ -2,6 +2,7 @@ package com.prodyna.voting.vote;
 
 import com.prodyna.voting.auth.user.Role;
 import com.prodyna.voting.auth.user.User;
+import com.prodyna.voting.common.NumberUtils;
 import com.prodyna.voting.common.Reject;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollOption;
@@ -57,9 +58,15 @@ public class VoteServiceImpl implements VoteService {
         }
 
         List<Vote> votes = voteRepository.findByPollId(pollId);
+        int validVotesCount = 0;
+
         for (Vote vote : votes) {
-            Integer count = optionsWithCount.get(vote.getOptionId());
-            optionsWithCount.put(vote.getOptionId(), ++count);
+            // if some option was deleted, the vote for that option becomes invalid
+            if (optionsWithCount.containsKey(vote.getOptionId())) {
+                Integer count = optionsWithCount.get(vote.getOptionId());
+                optionsWithCount.put(vote.getOptionId(), ++count);
+                validVotesCount++;
+            }
         }
 
         List<VotingOptionResult> votingOptionResults = new ArrayList<>();
@@ -68,7 +75,7 @@ public class VoteServiceImpl implements VoteService {
             votingOptionResult.setOptionId(optionsWithCountEntry.getKey());
             votingOptionResult.setCountVotes(optionsWithCountEntry.getValue());
 
-            float percentage = calculatePercentage(optionsWithCountEntry.getValue(), optionsWithCount.size());
+            float percentage = calculatePercentage(optionsWithCountEntry.getValue(), validVotesCount);
             votingOptionResult.setPercentage(percentage);
 
             votingOptionResults.add(votingOptionResult);
@@ -77,8 +84,8 @@ public class VoteServiceImpl implements VoteService {
         return new VotingResults(pollId, votingOptionResults);
     }
 
-    private float calculatePercentage(float numberOfVotes, float numberOfOptions) {
-        return numberOfVotes / numberOfOptions * 100;
+    private float calculatePercentage(float numberOfVotesForOption, float numberOfVotesTotal) {
+        return NumberUtils.round2Decimals(numberOfVotesForOption / numberOfVotesTotal * 100);
     }
 
     private void validateUserPermission(String pollId, User user) {

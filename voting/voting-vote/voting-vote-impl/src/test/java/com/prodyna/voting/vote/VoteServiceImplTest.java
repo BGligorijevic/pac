@@ -36,9 +36,9 @@ public class VoteServiceImplTest {
     private PollService pollService;
 
     private static final String POLL_ID = "12345";
-    private static final String BMW_OPTION_ID = "1";
-    private static final String MERCEDES_OPTION_ID = "2";
-    private static final String AUDI_OPTION_ID = "3";
+    private static final String BMW_OPTION_ID = "0";
+    private static final String MERCEDES_OPTION_ID = "1";
+    private static final String AUDI_OPTION_ID = "2";
     private static final String USER_ID_1 = "77775235";
     private static final String USER_ID_2 = "999943242";
     private static final String USER_ID_3 = "235243242";
@@ -88,7 +88,6 @@ public class VoteServiceImplTest {
         assertTrue(pollResults.getVotingOptionResults() != null);
         assertTrue(pollResults.getVotingOptionResults().size() == 3);
 
-        boolean allOptionsChecked = true;
         float percentageSum = 0;
 
         for (VotingOptionResult votingOptionResult : pollResults.getVotingOptionResults()) {
@@ -97,28 +96,64 @@ public class VoteServiceImplTest {
             if (votingOptionResult.getOptionId().equals(BMW_OPTION_ID)) {
                 assertTrue(votingOptionResult.getCountVotes() == 2);
                 expectedPercentage = 66.67f;
-                assertTrue(roundValue(votingOptionResult.getPercentage()) == expectedPercentage);
+                assertTrue(votingOptionResult.getPercentage() == expectedPercentage);
             } else if (votingOptionResult.getOptionId().equals(MERCEDES_OPTION_ID)) {
                 assertTrue(votingOptionResult.getCountVotes() == 1);
                 expectedPercentage = 33.33f;
-                assertTrue(roundValue(votingOptionResult.getPercentage()) == expectedPercentage);
+                assertTrue(votingOptionResult.getPercentage() == expectedPercentage);
             } else if (votingOptionResult.getOptionId().equals(AUDI_OPTION_ID)) {
                 assertTrue(votingOptionResult.getCountVotes() == 0);
                 expectedPercentage = 0;
                 assertTrue(votingOptionResult.getPercentage() == expectedPercentage);
-            } else {
-                allOptionsChecked = false;
             }
 
             percentageSum += expectedPercentage;
         }
 
-        assertTrue(allOptionsChecked);
         assertTrue(percentageSum == 100f);
     }
 
-    private float roundValue(float value) {
-        return (float) Math.round(value * 100f) / 100f;
+    /**
+     * Test for {@link VoteServiceImpl#getVotingResults(String, User)}.
+     */
+    @Test
+    public void voteResultsAreReturnedProperlyEvenIfSomeOptionIsRemoved() {
+        Poll carPoll = buildPoll();
+        // remove mercedes option, e.g. admin edits the poll after some votes were already made
+        // this means that the votes become invalid and are not calculated
+        carPoll.getPollOptions().remove(Integer.valueOf(MERCEDES_OPTION_ID).intValue());
+
+        User user = buildUser();
+        List<Vote> votes = buildVotes();
+
+        when(pollService.getPoll(carPoll.get_id())).thenReturn(Optional.of(carPoll));
+        when(voteRepository.findByPollId(carPoll.get_id())).thenReturn(votes);
+
+        VotingResults pollResults = voteService.getVotingResults(POLL_ID, user);
+        assertTrue(pollResults != null);
+        assertTrue(pollResults.getPollId().equals(POLL_ID));
+        assertTrue(pollResults.getVotingOptionResults() != null);
+        assertTrue(pollResults.getVotingOptionResults().size() == 2);
+
+        float percentageSum = 0;
+
+        for (VotingOptionResult votingOptionResult : pollResults.getVotingOptionResults()) {
+            float expectedPercentage = 0;
+
+            if (votingOptionResult.getOptionId().equals(BMW_OPTION_ID)) {
+                assertTrue(votingOptionResult.getCountVotes() == 2);
+                expectedPercentage = 100f;
+                assertTrue(votingOptionResult.getPercentage() == expectedPercentage);
+            } else if (votingOptionResult.getOptionId().equals(AUDI_OPTION_ID)) {
+                assertTrue(votingOptionResult.getCountVotes() == 0);
+                expectedPercentage = 0;
+                assertTrue(votingOptionResult.getPercentage() == expectedPercentage);
+            }
+
+            percentageSum += expectedPercentage;
+        }
+
+        assertTrue(percentageSum == 100f);
     }
 
     private Poll buildPoll() {

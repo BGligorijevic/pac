@@ -3,6 +3,7 @@ package com.prodyna.voting.vote.helper;
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.auth.user.User;
+import com.prodyna.voting.common.NumberUtils;
 import com.prodyna.voting.common.testing.VotingTestHelper;
 import com.prodyna.voting.poll.helper.PollTestHelper;
 import com.prodyna.voting.poll.helper.TestPoll;
@@ -112,12 +113,17 @@ public class VoteTestHelper implements VotingTestHelper {
         assertTrue(votingResults.getPollId().equals(testPoll.get_id()));
         assertTrue(votingResults.getVotingOptionResults().size() == testPoll.getPollOptions().size());
 
-        Map<String, Integer> optionsVotedWithVoteCount = getOptionsVotedWithVoteCount();
+        Map<String, Integer> optionsVotedWithVoteCount = getOptionsVotedWithVoteCount(votes);
+
+        int totalVotes = votes.length;
 
         for (VotingOptionResult votingOptionResult : votingResults.getVotingOptionResults()) {
             if (optionsVotedWithVoteCount.containsKey(votingOptionResult.getOptionId())) {
-                int expected = optionsVotedWithVoteCount.get(votingOptionResult.getOptionId());
-                assertTrue(expected == votingOptionResult.getCountVotes());
+                int expectedCount = optionsVotedWithVoteCount.get(votingOptionResult.getOptionId());
+                assertTrue(expectedCount == votingOptionResult.getCountVotes());
+
+                float expectedPercentage = NumberUtils.round2Decimals(100 * (float) expectedCount / (float) totalVotes);
+                assertTrue(expectedPercentage == votingOptionResult.getPercentage());
             }
         }
     }

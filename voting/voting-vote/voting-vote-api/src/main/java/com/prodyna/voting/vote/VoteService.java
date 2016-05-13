@@ -20,6 +20,7 @@ public interface VoteService {
 
     /**
      * Returns the results of the voting for specified poll.
+     * Percentages of each vote option are rounded on 2 decimal places.
      *
      * @param pollId Poll id
      * @param user

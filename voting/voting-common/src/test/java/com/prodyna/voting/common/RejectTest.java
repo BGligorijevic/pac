@@ -1,12 +1,9 @@
 package com.prodyna.voting.common;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.*;
 
-@RunWith(PowerMockRunner.class)
 public class RejectTest {
 
     /**
