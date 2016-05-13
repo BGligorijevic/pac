@@ -11,5 +11,5 @@ public class VotingOptionResult {
 
     private int countVotes;
 
-    private double percentage;
+    private float percentage;
 }

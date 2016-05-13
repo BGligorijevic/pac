@@ -38,7 +38,10 @@ public class VoteServiceImplTest {
     private static final String POLL_ID = "12345";
     private static final String BMW_OPTION_ID = "1";
     private static final String MERCEDES_OPTION_ID = "2";
-    private static final String USER_ID = "7777";
+    private static final String AUDI_OPTION_ID = "3";
+    private static final String USER_ID_1 = "77775235";
+    private static final String USER_ID_2 = "999943242";
+    private static final String USER_ID_3 = "235243242";
 
     /**
      * Test for {@link VoteServiceImpl#vote(String, String, User)}.
@@ -83,23 +86,39 @@ public class VoteServiceImplTest {
         assertTrue(pollResults != null);
         assertTrue(pollResults.getPollId().equals(POLL_ID));
         assertTrue(pollResults.getVotingOptionResults() != null);
-        assertTrue(pollResults.getVotingOptionResults().size() == 2);
+        assertTrue(pollResults.getVotingOptionResults().size() == 3);
 
         boolean allOptionsChecked = true;
+        float percentageSum = 0;
 
         for (VotingOptionResult votingOptionResult : pollResults.getVotingOptionResults()) {
+            float expectedPercentage = 0;
+
             if (votingOptionResult.getOptionId().equals(BMW_OPTION_ID)) {
                 assertTrue(votingOptionResult.getCountVotes() == 2);
-                assertTrue(votingOptionResult.getPercentage() == 100);
+                expectedPercentage = 66.67f;
+                assertTrue(roundValue(votingOptionResult.getPercentage()) == expectedPercentage);
             } else if (votingOptionResult.getOptionId().equals(MERCEDES_OPTION_ID)) {
+                assertTrue(votingOptionResult.getCountVotes() == 1);
+                expectedPercentage = 33.33f;
+                assertTrue(roundValue(votingOptionResult.getPercentage()) == expectedPercentage);
+            } else if (votingOptionResult.getOptionId().equals(AUDI_OPTION_ID)) {
                 assertTrue(votingOptionResult.getCountVotes() == 0);
-                assertTrue(votingOptionResult.getPercentage() == 0);
+                expectedPercentage = 0;
+                assertTrue(votingOptionResult.getPercentage() == expectedPercentage);
             } else {
                 allOptionsChecked = false;
             }
+
+            percentageSum += expectedPercentage;
         }
 
         assertTrue(allOptionsChecked);
+        assertTrue(percentageSum == 100f);
+    }
+
+    private float roundValue(float value) {
+        return (float) Math.round(value * 100f) / 100f;
     }
 
     private Poll buildPoll() {
@@ -110,8 +129,12 @@ public class VoteServiceImplTest {
         PollOption pollOption2 = new PollOption("Mercedes");
         pollOption2.set_id(MERCEDES_OPTION_ID);
 
+        PollOption pollOption3 = new PollOption("Mercedes");
+        pollOption3.set_id(AUDI_OPTION_ID);
+
         pollOptions.add(pollOption1);
         pollOptions.add(pollOption2);
+        pollOptions.add(pollOption3);
 
         Poll carPoll = new Poll();
         carPoll.set_id(POLL_ID);
@@ -123,7 +146,7 @@ public class VoteServiceImplTest {
 
     private User buildUser() {
         User user = new User();
-        user.setUserId(USER_ID);
+        user.setUserId(USER_ID_1);
         user.setRole(Role.ADMINISTRATOR);
 
         return user;
@@ -134,15 +157,21 @@ public class VoteServiceImplTest {
         Vote bmwVote1 = new Vote();
         bmwVote1.setPollId(POLL_ID);
         bmwVote1.setOptionId(BMW_OPTION_ID);
-        bmwVote1.setUserId(USER_ID);
+        bmwVote1.setUserId(USER_ID_1);
 
         Vote bmwVote2 = new Vote();
         bmwVote2.setPollId(POLL_ID);
         bmwVote2.setOptionId(BMW_OPTION_ID);
-        bmwVote2.setUserId(USER_ID);
+        bmwVote2.setUserId(USER_ID_2);
+
+        Vote mercedesVote = new Vote();
+        mercedesVote.setPollId(POLL_ID);
+        mercedesVote.setOptionId(MERCEDES_OPTION_ID);
+        mercedesVote.setUserId(USER_ID_3);
 
         votes.add(bmwVote1);
         votes.add(bmwVote2);
+        votes.add(mercedesVote);
 
         return votes;
     }
@@ -151,7 +180,7 @@ public class VoteServiceImplTest {
         return new TypeSafeMatcher<Vote>() {
             public boolean matchesSafely(Vote vote) {
                 return MERCEDES_OPTION_ID.equals(vote.getOptionId()) && POLL_ID.equals(vote.getPollId())
-                        && USER_ID.equals(vote.getUserId());
+                        && USER_ID_1.equals(vote.getUserId());
             }
 
             public void describeTo(Description description) {

@@ -68,7 +68,7 @@ public class VoteServiceImpl implements VoteService {
             votingOptionResult.setOptionId(optionsWithCountEntry.getKey());
             votingOptionResult.setCountVotes(optionsWithCountEntry.getValue());
 
-            double percentage = calculatePercentage(optionsWithCountEntry.getValue(), optionsWithCount.size());
+            float percentage = calculatePercentage(optionsWithCountEntry.getValue(), optionsWithCount.size());
             votingOptionResult.setPercentage(percentage);
 
             votingOptionResults.add(votingOptionResult);
@@ -77,7 +77,7 @@ public class VoteServiceImpl implements VoteService {
         return new VotingResults(pollId, votingOptionResults);
     }
 
-    private double calculatePercentage(int numberOfVotes, int numberOfOptions) {
+    private float calculatePercentage(float numberOfVotes, float numberOfOptions) {
         return numberOfVotes / numberOfOptions * 100;
     }
 
