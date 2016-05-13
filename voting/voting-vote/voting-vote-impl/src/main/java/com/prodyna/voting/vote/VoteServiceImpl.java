@@ -9,9 +9,7 @@ import com.prodyna.voting.poll.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -44,8 +42,52 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public VotingResults getPollResults(String pollId, User user) {
-        Reject.always("To be implemented!");
-        return null;
+        Reject.ifNull(pollId, "No poll id specified.");
+        Reject.ifNull(user, "No user specified.");
+        Reject.ifNull(user.getUserId(), "No user id specified.");
+
+        Optional<Poll> poll = pollService.getPoll(pollId);
+        Reject.ifAbsent(poll, "No poll found with id " + pollId);
+
+        validateUserPermission(pollId, user);
+
+        Map<String, Integer> optionsWithCount = new HashMap<>();
+        for (PollOption pollOption : poll.get().getPollOptions()) {
+            optionsWithCount.put(pollOption.get_id(), 0);
+        }
+
+        List<Vote> votes = voteRepository.findByPollId(pollId);
+        for (Vote vote : votes) {
+            Integer count = optionsWithCount.get(vote.getOptionId());
+            optionsWithCount.put(vote.getOptionId(), ++count);
+        }
+
+        List<VotingOptionResult> votingOptionResults = new ArrayList<>();
+        for (Map.Entry<String, Integer> optionsWithCountEntry : optionsWithCount.entrySet()) {
+            VotingOptionResult votingOptionResult = new VotingOptionResult();
+            votingOptionResult.setOptionId(optionsWithCountEntry.getKey());
+            votingOptionResult.setCountVotes(optionsWithCountEntry.getValue());
+
+            double percentage = calculatePercentage(optionsWithCountEntry.getValue(), optionsWithCount.size());
+            votingOptionResult.setPercentage(percentage);
+
+            votingOptionResults.add(votingOptionResult);
+        }
+
+        return new VotingResults(pollId, votingOptionResults);
+    }
+
+    private double calculatePercentage(int numberOfVotes, int numberOfOptions) {
+        return numberOfVotes / numberOfOptions * 100;
+    }
+
+    private void validateUserPermission(String pollId, User user) {
+        if (!Role.isUserAdmin(user)) {
+            List<Vote> vote = voteRepository.findByUserIdAndPollId(user.getUserId(), pollId);
+            if (vote.size() != 1) {
+                throw new IllegalArgumentException("Results can only be retrieved if the user has already voted.");
+            }
+        }
     }
 
     @Override

@@ -14,4 +14,10 @@ public class VotingResults {
     private String pollId;
 
     List<VotingOptionResult> votingOptionResults;
+
+    /**
+     * Please do not remove, Spring Data needs default constructor.
+     */
+    public VotingResults() {
+    }
 }
