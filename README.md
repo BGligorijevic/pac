@@ -5,7 +5,7 @@ This project contains the back-end code related for PAC course.
 Pre-requisites:
 - Java JDK 8 (add to OS path)
 - Maven 3+ (add to OS path)
-- Optional (needed to run integration tests): Check-out pac-infrastructure project and run "vagrant up", this will provide the necesarry infrastructure.
+- Optional (needed to run integration tests): Check-out pac-infrastructure project and run "vagrant up", this will provide the necessary infrastructure.
 
 Building the project:
 - mvn clean package -- this will build the fat jar file and run unit tests.
