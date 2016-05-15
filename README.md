@@ -8,8 +8,8 @@ Pre-requisites:
 - Optional (needed to run integration tests): Check-out pac-infrastructure project and run "vagrant up", this will provide the necessary infrastructure.
 
 Building the project:
-- mvn clean package -- this will build the fat jar file and run unit tests.
-- mvn clean install -- this build the the fat jar file, run unit tests and also run integration tests (you need pac-infrastructure in order to run integration tests)
+- mvn clean package -- this builds the fat jar file and run unit tests.
+- mvn clean install -- this builds the the fat jar file, run unit tests and also run integration tests (you need pac-infrastructure in order to run integration tests)
 
 Usage:
 cd into pac-back-end/voting/voting-application/target and run java -jar voting-application-1.0-SNAPSHOT.jar. This will boot the Tomcat instance on localhost:8080 containing all the back-end logic exposed as REST services.
