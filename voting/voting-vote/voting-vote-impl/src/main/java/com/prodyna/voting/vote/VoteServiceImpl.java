@@ -37,7 +37,7 @@ public class VoteServiceImpl implements VoteService {
     private void validateAlreadyVoted(String userId, String pollId) {
         List<Vote> votes = voteRepository.findByUserIdAndPollId(userId, pollId);
         if (!votes.isEmpty()) {
-            throw new IllegalArgumentException("User has already voted on this poll.");
+            Reject.always("User has already voted on this poll.");
         }
     }
 
@@ -92,7 +92,7 @@ public class VoteServiceImpl implements VoteService {
         if (!Role.isUserAdmin(user)) {
             List<Vote> vote = voteRepository.findByUserIdAndPollId(user.getUserId(), pollId);
             if (vote.size() != 1) {
-                throw new IllegalArgumentException("Results can only be retrieved if the user has already voted.");
+                Reject.always("Results can only be retrieved if the user has already voted.");
             }
         }
     }
