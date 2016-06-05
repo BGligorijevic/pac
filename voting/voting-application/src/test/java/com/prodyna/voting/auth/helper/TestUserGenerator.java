@@ -24,5 +24,8 @@ public class TestUserGenerator {
     @Ignore
     public void generateSampleTestingUsers() {
         userService.saveUser(TestUser.USER_1.toUserObject());
+        System.out.println("********* Created user for testing purposes (copy the values) *********");
+        System.out.println("UserName: " + TestUser.USER_1.getUsername());
+        System.out.println("Password: " + TestUser.USER_1.getPass());
     }
 }
