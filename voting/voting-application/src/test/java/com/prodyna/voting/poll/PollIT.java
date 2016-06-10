@@ -4,6 +4,7 @@ import com.prodyna.voting.Application;
 import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import com.prodyna.voting.poll.helper.PollTestHelper;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,6 @@ public class PollIT implements VotingIntegrationTest {
 
     @Autowired
     private PollTestHelper $;
-
-    @After
-    @Override
-    public void cleanUp() {
-        $.cleanup();
-    }
 
     @Test
     public void all_polls_are_returned() throws Exception {
@@ -117,5 +112,17 @@ public class PollIT implements VotingIntegrationTest {
         $.given_the_polls(ALL_POLLS);
         $.when_edit_poll_request_is_sent(CHANGED_ICE_CREAM);
         $.then_no_poll_is_edited();
+    }
+
+    @Before
+    @Override
+    public void cleanUpBefore() {
+        $.cleanup();
+    }
+
+    @After
+    @Override
+    public void cleanUpAfter() {
+        $.cleanup();
     }
 }

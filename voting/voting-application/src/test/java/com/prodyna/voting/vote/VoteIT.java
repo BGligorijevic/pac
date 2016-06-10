@@ -4,6 +4,7 @@ import com.prodyna.voting.Application;
 import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import com.prodyna.voting.vote.helper.VoteTestHelper;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,6 @@ public class VoteIT implements VotingIntegrationTest {
 
     @Autowired
     private VoteTestHelper $;
-
-    @After
-    @Override
-    public void cleanUp() {
-        $.cleanup();
-    }
 
     @Test
     public void vote_is_created() throws Exception {
@@ -75,5 +70,17 @@ public class VoteIT implements VotingIntegrationTest {
         $.given_the_votes(VOTE_FOR_VANILLA);
         $.when_get_voting_results_request_for_poll_is_sent(ICE_CREAM);
         $.then_voting_results_for_poll_are_not_returned();
+    }
+
+    @Before
+    @Override
+    public void cleanUpBefore() {
+        $.cleanup();
+    }
+
+    @After
+    @Override
+    public void cleanUpAfter() {
+        $.cleanup();
     }
 }

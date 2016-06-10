@@ -6,6 +6,7 @@ import com.prodyna.voting.common.Reject;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -43,24 +44,26 @@ public class SecurityFilter extends GenericFilterBean {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
 
+        if (request.getMethod().equalsIgnoreCase(HttpMethod.OPTIONS.name())) {
+            chain.doFilter(req, res);
+            return;
+        }
+
         final String authHeader = request.getHeader(AUTHORIZATION_HEADER_PARAM);
         if (noAuthToken(authHeader)) {
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return;
         }
 
-        final String token = authHeader.substring(TOKEN_BEGIN_INDEX);
-        User user;
-
         try {
-            user = parseToken(token);
+            String token = authHeader.substring(TOKEN_BEGIN_INDEX);
+            User user = parseToken(token);
+            request.setAttribute("user", user);
+            chain.doFilter(req, res);
         } catch (final Exception e) {
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return;
         }
-
-        request.setAttribute("user", user);
-        chain.doFilter(req, res);
     }
 
     private User parseToken(String token) {

@@ -4,6 +4,7 @@ import com.prodyna.voting.Application;
 import com.prodyna.voting.auth.helper.LoginITHelper;
 import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,15 @@ public class LoginIT implements VotingIntegrationTest {
         $.then_the_unauthorized_status_code_is_returned();
     }
 
+    @Before
+    @Override
+    public void cleanUpBefore() {
+        $.cleanup();
+    }
+
     @After
     @Override
-    public void cleanUp() {
+    public void cleanUpAfter() {
         $.cleanup();
     }
 }
