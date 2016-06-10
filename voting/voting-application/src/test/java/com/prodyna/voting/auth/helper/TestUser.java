@@ -12,9 +12,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TestUser {
 
-    USER_1("user_1", "Tom Jones", "tom_jones_446", Role.USER),
+    USER_1("user_1", "test", "test", Role.USER),
     USER_2("user_2", "Dirk Nowitzki", "ABC_nowitzki_123", Role.USER),
-    ADMIN_1("admin", "Tom Hanks", "tommy", Role.ADMINISTRATOR);
+    ADMIN_1("admin", "admin", "admin", Role.ADMINISTRATOR);
 
     private String userId;
     private String username;
