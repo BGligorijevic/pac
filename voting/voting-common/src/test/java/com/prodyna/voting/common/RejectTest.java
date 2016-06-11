@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import java.util.*;
 
+/**
+ * Unit tests for {@link Reject} class.
+ */
 public class RejectTest {
 
     /**
@@ -86,18 +89,18 @@ public class RejectTest {
     }
 
     /**
-     * Test for {@link Reject#iF(boolean, String)}.
+     * Test for {@link Reject#ifFalse(boolean, String)}.
      */
     @Test(expected = IllegalArgumentException.class)
     public void rejectsIfExpressionIsSatisfied() {
-        Reject.iF(1 == 1, "Exception is thrown here");
+        Reject.ifFalse(1 == 2, "Exception is thrown here");
     }
 
     /**
-     * Test for {@link Reject#iF(boolean, String)}.
+     * Test for {@link Reject#ifFalse(boolean, String)}.
      */
     @Test
     public void doesNotRejectIfExpressionNotSatisfied() {
-        Reject.iF(1 == 2, "Exception is not thrown here");
+        Reject.ifFalse(1 == 1, "Exception is not thrown here");
     }
 }

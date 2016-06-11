@@ -12,18 +12,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TestUser {
 
-    USER_1("user_1", "test", "test", Role.USER),
-    USER_2("user_2", "Dirk Nowitzki", "ABC_nowitzki_123", Role.USER),
-    ADMIN_1("admin", "admin", "admin", Role.ADMINISTRATOR);
+    USER_1("test", "test", Role.USER),
+    USER_2("Dirk Nowitzki", "ABC_nowitzki_123", Role.USER),
+    ADMIN_1("admin", "admin", Role.ADMINISTRATOR);
 
-    private String userId;
     private String username;
     private String pass;
     private Role role;
 
     public User toUserObject() {
         User user = new User();
-        user.setUserId(this.userId);
         user.setUserName(this.username);
         user.setPassword(this.pass);
         user.setRole(this.role);

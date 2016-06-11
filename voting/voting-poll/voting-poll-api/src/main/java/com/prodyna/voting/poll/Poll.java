@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +20,11 @@ public class Poll {
     private String description;
 
     @NotNull
-    private String authorId;
+    private String creator;
 
     @NotNull
     private Date changeDate;
 
     @NotNull
-    private List<PollOption> pollOptions;
+    private List<PollOption> pollOptions = new ArrayList<>();
 }

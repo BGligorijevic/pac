@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Unit tests for {@link NumberUtils} class.
+ */
 public class NumberUtilsTest {
 
     private static final float INPUT_VALUE = 10.55555555f;

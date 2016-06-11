@@ -1,6 +1,5 @@
 package com.prodyna.voting.common;
 
-
 import java.math.BigDecimal;
 
 /**

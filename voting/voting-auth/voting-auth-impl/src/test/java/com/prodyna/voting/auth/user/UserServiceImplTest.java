@@ -45,12 +45,12 @@ public class UserServiceImplTest {
     @Test
     public void findsUserByUserNameAndPassword() {
         User user = new User();
-        user.setUserId("12345");
+        user.setUserName("12345");
 
         when(userRepository.findByUserNameAndPassword(anyString(), anyString())).thenReturn(user);
         Optional<User> foundUser = userService.findUserByUserNameAndPassword("bla", "bla");
         assertTrue(foundUser.isPresent());
-        assertTrue(foundUser.get().getUserId().equals(user.getUserId()));
+        assertTrue(foundUser.get().getUserName().equals(user.getUserName()));
     }
 
     /**

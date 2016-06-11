@@ -29,14 +29,14 @@ public final class Reject {
     }
 
     /**
-     * Throws a {@link IllegalArgumentException} if the expression to test is true.
+     * Throws a {@link IllegalArgumentException} if the expression to test is false.
      * Wrapper method for such exception.
      *
      * @param expressionToTest Flag to examine
      * @param description      Text to add to exception
      */
-    public static void iF(boolean expressionToTest, String description) {
-        if (expressionToTest) {
+    public static void ifFalse(boolean expressionToTest, String description) {
+        if (!expressionToTest) {
             always(description);
         }
     }

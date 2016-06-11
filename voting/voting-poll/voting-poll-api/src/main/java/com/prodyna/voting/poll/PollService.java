@@ -32,7 +32,6 @@ public interface PollService {
 
     /**
      * Returns all polls.
-     *
      * @return
      */
     List<Poll> getAllPolls();
@@ -61,4 +60,15 @@ public interface PollService {
      * @throws IllegalArgumentException if user has no permission to delete the polls
      */
     void deleteAllPolls(User user);
+
+    /**
+     * Saves a vote of the specified user.
+     *
+     * @param pollId   Poll id
+     * @param optionId Id of the option to vote for
+     * @param user     User who is voting
+     *
+     * @return Poll changed poll containing new vote
+     */
+    Poll vote(String pollId, String optionId, User user);
 }

@@ -75,7 +75,7 @@ public class SecurityFilter extends GenericFilterBean {
         Role role = Role.forRoleValue(roleName);
 
         User user = new User();
-        user.setUserId(jwtClaims.getSubject());
+        user.setUserName(jwtClaims.getSubject());
         user.setRole(role);
 
         return user;

@@ -12,6 +12,9 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+/**
+ * Unit tests for class {@link PollRestApi}.
+ */
 @RunWith(PowerMockRunner.class)
 public class PollRestApiTest {
 

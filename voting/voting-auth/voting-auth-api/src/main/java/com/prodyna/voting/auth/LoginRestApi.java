@@ -39,7 +39,7 @@ public class LoginRestApi {
 
         User foundUser = dbUser.get();
 
-        String token = Jwts.builder().setSubject(foundUser.getUserId()).claim("role", foundUser.getRole())
+        String token = Jwts.builder().setSubject(foundUser.getUserName()).claim("role", foundUser.getRole())
                 .setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, secretKey).compact();
 
         return token;

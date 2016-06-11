@@ -47,6 +47,11 @@ public class PollRestApi {
         return poll.get();
     }
 
+    @RequestMapping(value = "/vote/{pollId}/{optionId}", method = RequestMethod.POST)
+    public Poll vote(@PathVariable String pollId, @PathVariable String optionId, HttpServletRequest request) {
+        return pollService.vote(pollId, optionId, userFromRequest(request));
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePoll(@PathVariable String id, HttpServletRequest request) {
         pollService.deletePoll(id, userFromRequest(request));

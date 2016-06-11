@@ -3,6 +3,7 @@ package com.prodyna.voting.poll;
 import com.prodyna.voting.Application;
 import com.prodyna.voting.common.testing.VotingIntegrationTest;
 import com.prodyna.voting.poll.helper.PollTestHelper;
+import com.prodyna.voting.poll.helper.TestVote;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,6 +113,38 @@ public class PollIT implements VotingIntegrationTest {
         $.given_the_polls(ALL_POLLS);
         $.when_edit_poll_request_is_sent(CHANGED_ICE_CREAM);
         $.then_no_poll_is_edited();
+    }
+
+    @Test
+    public void voting_works() {
+        $.given_a_logged_in_existing_user(USER_2);
+        $.given_the_polls(ALL_POLLS);
+        $.when_vote_request_is_sent(TestVote.VOTE_FOR_SNICKERS);
+        $.then_the_returned_poll_contains_votes(TestVote.VOTE_FOR_SNICKERS);
+    }
+
+    @Test
+    public void user_cannot_vote_twice_on_the_same_poll() {
+        $.given_a_logged_in_existing_user(USER_2);
+        $.given_the_polls(ALL_POLLS);
+        $.when_vote_request_is_sent(TestVote.VOTE_FOR_SNICKERS);
+        $.then_the_returned_poll_contains_votes(TestVote.VOTE_FOR_SNICKERS);
+
+        $.when_vote_request_is_sent(TestVote.VOTE_FOR_VANILLA_USER_2);
+        $.then_no_vote_is_allowed();
+    }
+
+    @Test
+    public void two_users_can_vote_on_the_same_poll() {
+        $.given_a_logged_in_existing_user(USER_1);
+        $.given_the_polls(ALL_POLLS);
+        $.when_vote_request_is_sent(TestVote.VOTE_FOR_VANILLA);
+        $.then_the_returned_poll_contains_votes(TestVote.VOTE_FOR_VANILLA);
+
+        $.given_a_logged_in_existing_user(USER_2);
+        $.when_vote_request_is_sent(TestVote.VOTE_FOR_SNICKERS);
+
+        $.then_the_returned_poll_contains_votes(TestVote.VOTE_FOR_VANILLA, TestVote.VOTE_FOR_SNICKERS);
     }
 
     @Before

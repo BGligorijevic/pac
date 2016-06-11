@@ -5,16 +5,21 @@ import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.common.Nothing;
 import com.prodyna.voting.common.testing.VotingTestHelper;
 import com.prodyna.voting.poll.Poll;
+import com.prodyna.voting.poll.PollOption;
 import com.prodyna.voting.poll.PollService;
+import com.prodyna.voting.poll.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @Component
@@ -87,6 +92,17 @@ public class PollTestHelper implements VotingTestHelper {
         }
     }
 
+    public void when_vote_request_is_sent(TestVote testVote) {
+        try {
+            String fullVoteUrl = POLLS_REST_URL + "/vote/" + testVote.getPollId() + "/" + testVote.getOptionId();
+            onePollResponse = template.exchange(fullVoteUrl, HttpMethod.POST, getHeader(), Poll.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
+                forbiddenReturned = true;
+            }
+        }
+    }
+
     public void then_poll_has_correct_data(TestPoll testPoll) {
         Poll pollResult = onePollResponse.getBody();
         assertTrue(pollResult != null);
@@ -100,6 +116,10 @@ public class PollTestHelper implements VotingTestHelper {
     }
 
     public void then_no_poll_is_edited() {
+        assertTrue(forbiddenReturned == true);
+    }
+
+    public void then_no_vote_is_allowed() {
         assertTrue(forbiddenReturned == true);
     }
 
@@ -126,6 +146,17 @@ public class PollTestHelper implements VotingTestHelper {
         List<Poll> polls = Arrays.asList(allPollsResponse.getBody());
         assertTrue(!polls.isEmpty());
         assertTrue(polls.size() == n);
+    }
+
+    public void then_the_returned_poll_contains_votes(TestVote... testVotes) {
+        Poll pollResult = onePollResponse.getBody();
+        assertTrue(pollResult != null);
+
+        List<Vote> votes = new ArrayList<>();
+        for (PollOption pollOption : pollResult.getPollOptions()) {
+            votes.addAll(pollOption.getVotes());
+        }
+        assertThat(votes, is(TestVote.toVoteObjects(testVotes)));
     }
 
     public void cleanup() {
