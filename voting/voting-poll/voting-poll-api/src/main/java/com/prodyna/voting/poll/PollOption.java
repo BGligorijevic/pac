@@ -28,6 +28,8 @@ public class PollOption {
     @NotNull
     private List<Vote> votes = new ArrayList<>();
 
+    private float percentage;
+
     /**
      * Please do not remove, Spring Data needs default constructor.
      */

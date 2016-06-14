@@ -2,6 +2,7 @@ package com.prodyna.voting.poll;
 
 import com.prodyna.voting.auth.user.Role;
 import com.prodyna.voting.auth.user.User;
+import com.prodyna.voting.common.NumberUtils;
 import com.prodyna.voting.common.Reject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,19 +98,23 @@ public class PollServiceImpl implements PollService {
         Reject.ifAbsent(poll, "No such poll exists.");
 
         List<PollOption> pollOptions = poll.get().getPollOptions();
-        validateAlreadyVoted(pollOptions, user.getUserName());
+        int votesNumber = validateAlreadyVotedAndGetNumberOfVotes(pollOptions, user.getUserName());
 
         boolean optionFound = false;
         for (PollOption pollOption : pollOptions) {
             if (pollOption.get_id().equals(optionId)) {
                 optionFound = true;
                 addVote(pollOption, user);
-                break;
             }
+            pollOption.setPercentage(calculatePercentage(pollOption, votesNumber));
         }
         Reject.ifFalse(optionFound, "No such poll option exists.");
 
         return changePoll(poll.get(), user, true);
+    }
+
+    private float calculatePercentage(PollOption pollOption, float votesNumber) {
+        return NumberUtils.round2Decimals((float) pollOption.getVotes().size() / votesNumber * 100);
     }
 
     private void addVote(PollOption pollOption, User user) {
@@ -120,14 +125,18 @@ public class PollServiceImpl implements PollService {
         pollOption.getVotes().add(vote);
     }
 
-    private void validateAlreadyVoted(List<PollOption> pollOptions, String userName) {
+    private int validateAlreadyVotedAndGetNumberOfVotes(List<PollOption> pollOptions, String userName) {
+        int numberVotes = 0;
         for (PollOption pollOption : pollOptions) {
             for (Vote vote : pollOption.getVotes()) {
                 if (vote.getUser().equalsIgnoreCase(userName)) {
                     Reject.always("User has already voted on this poll. ");
                 }
+                numberVotes++;
             }
         }
+        // the one to be voted will add one vote onto existing count
+        return numberVotes + 1;
     }
 
     private boolean pollChangeAllowed(User user, Poll poll) {
