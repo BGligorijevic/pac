@@ -17,9 +17,9 @@ public interface UserService {
      * Tries to login the user with specified password, returning the appropriate result.
      *
      * @param userToLogin User with all information
-     * @return true if login succeeded, false if login failed
+     * @return user object if login succeeded, {@link Optional#empty()} if login failed.
      */
-    boolean login(User userToLogin);
+    Optional<User> login(User userToLogin);
 
     /**
      * Saves the user with hashed password.

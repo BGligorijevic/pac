@@ -1,14 +1,18 @@
 package com.prodyna.voting.auth.user;
 
 import com.prodyna.voting.common.Reject;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -16,6 +20,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private static final String HASH_ALGORITHM_NAME = "MD5";
+
+    @Value("${voting.app.secret.key}")
+    private String secretKey;
 
     @Autowired
     private UserRepository userRepository;
@@ -27,17 +34,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(User userToLogin) {
+    public Optional<User> login(User userToLogin) {
         Reject.ifNull(userToLogin, "Invalid login data");
 
         Optional<User> dbUser = findUserByUserName(userToLogin.getUserName());
         Reject.ifAbsent(dbUser, "No user with the specified userName exists. UserName=" + userToLogin.getUserName());
 
-        User foundUser = dbUser.get();
-        userToLogin.setRole(foundUser.getRole());
         String hashedPass = hashPassword(userToLogin.getPassword());
 
-        return hashedPass.equals(foundUser.getPassword());
+        User existingUser = dbUser.get();
+        if (!hashedPass.equals(existingUser.getPassword())) {
+            return Optional.empty();
+        }
+        existingUser.setToken(issueToken(existingUser));
+
+        return Optional.of(existingUser);
+    }
+
+    private String issueToken(User existingUser) {
+        return Jwts.builder().setSubject(existingUser.getUserName()).claim("role", existingUser.getRole())
+                .setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
 
     @Override

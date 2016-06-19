@@ -21,7 +21,7 @@ public class LoginITHelper implements VotingTestHelper {
 
     @Autowired
     private UserService userService;
-    private ResponseEntity<String> response;
+    private ResponseEntity<User> response;
 
     public void given_existing_users(TestUser... testUsers) {
         for (TestUser testUser : testUsers) {
@@ -39,7 +39,7 @@ public class LoginITHelper implements VotingTestHelper {
 
         HttpEntity<User> entity = new HttpEntity<>(knownUser);
 
-        response = template.postForEntity(LOGIN_REST_URL, entity, String.class);
+        response = template.postForEntity(LOGIN_REST_URL, entity, User.class);
     }
 
     public void when_the_wrong_login_credentials_are_sent() {
@@ -52,15 +52,16 @@ public class LoginITHelper implements VotingTestHelper {
 
         HttpEntity<User> entity = new HttpEntity<>(unknownUser);
 
-        response = template.postForEntity(LOGIN_REST_URL, entity, String.class);
+        response = template.postForEntity(LOGIN_REST_URL, entity, User.class);
     }
 
     public String then_the_access_token_is_returned() {
         assertTrue(response != null);
-        String token = response.getBody();
-        assertTrue(!token.isEmpty());
+        User userWithToken = response.getBody();
+        assertTrue(userWithToken != null);
+        assertTrue(!userWithToken.getToken().isEmpty());
 
-        return token;
+        return userWithToken.getToken();
     }
 
     public void then_the_unauthorized_status_code_is_returned() {

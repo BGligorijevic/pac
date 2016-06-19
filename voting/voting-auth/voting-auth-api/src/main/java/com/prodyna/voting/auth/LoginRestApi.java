@@ -3,16 +3,12 @@ package com.prodyna.voting.auth;
 import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.common.Reject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.Optional;
 
 /**
  * Rest controller handling login requests.
@@ -25,19 +21,12 @@ public class LoginRestApi {
     @Autowired
     private UserService userService;
 
-    @Value("${voting.app.secret.key}")
-    @Getter
-    private String secretKey;
-
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String login(@RequestBody final User user) {
-        boolean loggedIn = userService.login(user);
-        Reject.ifFalse(loggedIn, "Incorrect credentials.");
+    public User login(@RequestBody final User user) {
+        Optional<User> loginResult = userService.login(user);
+        Reject.ifAbsent(loginResult, "Incorrect credentials.");
 
-        String token = Jwts.builder().setSubject(user.getUserName()).claim("role", user.getRole())
-                .setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, secretKey).compact();
-
-        return token;
+        return loginResult.get();
     }
 
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
