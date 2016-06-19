@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +22,19 @@ public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    /**
+     * Test for {@link UserServiceImpl#saveUser(User)}.
+     */
+    @Test
+    public void savesUserCorrectly() {
+        User user = createUser();
+        when(userRepository.save(user)).thenReturn(user);
+
+        userService.saveUser(user);
+
+        verify(userRepository, times(1)).save(user);
+    }
 
     /**
      * Test for {@link UserServiceImpl#deleteAllUsers(User)}.
@@ -40,26 +54,26 @@ public class UserServiceImplTest {
     }
 
     /**
-     * Test for {@link UserServiceImpl#findUserByUserNameAndPassword(String, String)}.
+     * Test for {@link UserServiceImpl#findUserByUserName(String)}.
      */
     @Test
-    public void findsUserByUserNameAndPassword() {
+    public void findsUserByUserName() {
         User user = new User();
         user.setUserName("12345");
 
-        when(userRepository.findByUserNameAndPassword(anyString(), anyString())).thenReturn(user);
-        Optional<User> foundUser = userService.findUserByUserNameAndPassword("bla", "bla");
+        when(userRepository.findByUserName(anyString())).thenReturn(user);
+        Optional<User> foundUser = userService.findUserByUserName("bla");
         assertTrue(foundUser.isPresent());
         assertTrue(foundUser.get().getUserName().equals(user.getUserName()));
     }
 
     /**
-     * Test for {@link UserServiceImpl#findUserByUserNameAndPassword(String, String)}.
+     * Test for {@link UserServiceImpl#findUserByUserName(String)}.
      */
     @Test
-    public void findsUserByUserNameAndPasswordReturnsEmptyOptional() {
-        when(userRepository.findByUserNameAndPassword(anyString(), anyString())).thenReturn(null);
-        Optional<User> foundUser = userService.findUserByUserNameAndPassword("bla", "bla");
+    public void findsUserByUserNameReturnsEmptyOptional() {
+        when(userRepository.findByUserName(anyString())).thenReturn(null);
+        Optional<User> foundUser = userService.findUserByUserName("bla");
         assertTrue(!foundUser.isPresent());
     }
 

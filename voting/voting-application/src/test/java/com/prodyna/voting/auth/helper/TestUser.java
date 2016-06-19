@@ -13,7 +13,7 @@ import lombok.Getter;
 public enum TestUser {
 
     USER_1("test", "test", Role.USER),
-    USER_2("Dirk Nowitzki", "ABC_nowitzki_123", Role.USER),
+    USER_2("test2", "test2", Role.USER),
     ADMIN_1("admin", "admin", Role.ADMINISTRATOR);
 
     private String username;

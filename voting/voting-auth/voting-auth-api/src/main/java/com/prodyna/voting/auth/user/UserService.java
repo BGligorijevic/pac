@@ -4,14 +4,31 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<User> findUserByUserNameAndPassword(String userName, String password);
+    /**
+     * Returns the user name from the database for the specified userName.
+     * Returns {@link Optional#empty()} if such user is not found.
+     *
+     * @param userName user name of the user
+     * @return user wrapped in {@link Optional} or {@link Optional#empty()}.
+     */
+    Optional<User> findUserByUserName(String userName);
 
     /**
-     * Saves the user.
+     * Tries to login the user with specified password, returning the appropriate result.
+     *
+     * @param userToLogin User with all information
+     * @return true if login succeeded, false if login failed
+     */
+    boolean login(User userToLogin);
+
+    /**
+     * Saves the user with hashed password.
      *
      * @param user User
+     * @return Saved user
+     * @throws IllegalArgumentException if provided data is incomplete (missing userName or role etc)
      */
-    void saveUser(User user);
+    User saveUser(User user);
 
     /**
      * Deletes all users.
