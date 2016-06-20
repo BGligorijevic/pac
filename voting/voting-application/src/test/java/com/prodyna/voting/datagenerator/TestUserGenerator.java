@@ -32,6 +32,8 @@ public class TestUserGenerator {
 
     @Test
     public void generateTestData() {
+        removeAllTestData();
+
         for (TestUser user : TestUser.ALL_USERS) {
             userService.saveUser(user.toUserObject());
         }
