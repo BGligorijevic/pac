@@ -1,7 +1,8 @@
 package com.prodyna.voting.poll.helper;
 
 import com.prodyna.voting.auth.helper.LoginITHelper;
-import com.prodyna.voting.auth.helper.TestUser;
+import com.prodyna.voting.datagenerator.sampledata.TestPoll;
+import com.prodyna.voting.datagenerator.sampledata.TestUser;
 import com.prodyna.voting.common.Nothing;
 import com.prodyna.voting.common.testing.VotingTestHelper;
 import com.prodyna.voting.poll.Poll;
@@ -44,7 +45,7 @@ public class PollTestHelper implements VotingTestHelper {
 
     public void given_the_polls(TestPoll... testPolls) {
         for (TestPoll testPoll : testPolls) {
-            pollService.createPoll(testPoll.toPollObject());
+            pollService.createPoll(testPoll.toPollObject(), null);
         }
     }
 

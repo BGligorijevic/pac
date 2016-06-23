@@ -1,12 +1,12 @@
 package com.prodyna.voting.datagenerator;
 
 import com.prodyna.voting.Application;
-import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollOption;
 import com.prodyna.voting.poll.PollService;
-import com.prodyna.voting.poll.helper.TestPoll;
+import com.prodyna.voting.datagenerator.sampledata.TestPoll;
+import com.prodyna.voting.datagenerator.sampledata.TestUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class TestUserGenerator {
         }
 
         for (TestPoll poll : TestPoll.ALL_POLLS) {
-            pollService.createPoll(poll.toPollObject());
+            pollService.createPoll(poll.toPollObject(), null);
         }
     }
 

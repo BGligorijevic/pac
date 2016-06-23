@@ -13,8 +13,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static com.prodyna.voting.auth.helper.TestUser.ALL_USERS;
-import static com.prodyna.voting.auth.helper.TestUser.USER_1;
+import static com.prodyna.voting.datagenerator.sampledata.TestUser.ALL_USERS;
+import static com.prodyna.voting.datagenerator.sampledata.TestUser.USER_1;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)

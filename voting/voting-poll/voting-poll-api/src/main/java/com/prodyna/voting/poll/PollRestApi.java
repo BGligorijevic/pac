@@ -28,8 +28,8 @@ public class PollRestApi {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Poll createPoll(@RequestBody Poll poll) {
-        return pollService.createPoll(poll);
+    public Poll createPoll(@RequestBody Poll poll, HttpServletRequest request) {
+        return pollService.createPoll(poll, userFromRequest(request));
     }
 
     @RequestMapping(method = RequestMethod.PUT)

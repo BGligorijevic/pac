@@ -1,6 +1,5 @@
-package com.prodyna.voting.poll.helper;
+package com.prodyna.voting.datagenerator.sampledata;
 
-import com.prodyna.voting.auth.helper.TestUser;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollOption;
 import lombok.AllArgsConstructor;

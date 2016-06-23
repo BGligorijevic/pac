@@ -14,8 +14,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static com.prodyna.voting.auth.helper.TestUser.*;
-import static com.prodyna.voting.poll.helper.TestPoll.*;
+import static com.prodyna.voting.datagenerator.sampledata.TestUser.*;
+import static com.prodyna.voting.datagenerator.sampledata.TestPoll.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)

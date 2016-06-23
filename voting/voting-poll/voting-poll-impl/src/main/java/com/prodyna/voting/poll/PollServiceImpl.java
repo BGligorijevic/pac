@@ -6,6 +6,7 @@ import com.prodyna.voting.common.NumberUtils;
 import com.prodyna.voting.common.Reject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -19,17 +20,26 @@ public class PollServiceImpl implements PollService {
     private PollRepository pollRepository;
 
     @Override
-    public Poll createPoll(Poll poll) {
+    public Poll createPoll(Poll poll, User user) {
         validatePoll(poll);
 
+        if (StringUtils.isEmpty(poll.get_id())) {
+            poll.set_id(UUID.randomUUID().toString());
+        }
         if (poll.getChangeDate() == null) {
             poll.setChangeDate(new Date());
         }
 
-        poll.getPollOptions().stream().filter(pollOption -> pollOption.get_id() == null).forEach(pollOption -> {
-            pollOption.set_id(UUID.randomUUID().toString());
+        if (StringUtils.isEmpty(poll.getCreator())) {
+            poll.setCreator(user.getUserName());
+        }
+
+        for (PollOption pollOption : poll.getPollOptions()) {
+            if (StringUtils.isEmpty(pollOption.get_id())) {
+                pollOption.set_id(UUID.randomUUID().toString());
+            }
             pollOption.setPollId(poll.get_id());
-        });
+        }
 
         return pollRepository.insert(poll);
     }
