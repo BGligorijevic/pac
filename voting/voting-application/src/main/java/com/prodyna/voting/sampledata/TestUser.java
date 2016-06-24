@@ -1,4 +1,4 @@
-package com.prodyna.voting.datagenerator.sampledata;
+package com.prodyna.voting.sampledata;
 
 import com.prodyna.voting.auth.user.Role;
 import com.prodyna.voting.auth.user.User;

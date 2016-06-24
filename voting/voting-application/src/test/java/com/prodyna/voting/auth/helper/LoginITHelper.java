@@ -3,7 +3,7 @@ package com.prodyna.voting.auth.helper;
 import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.common.testing.VotingTestHelper;
-import com.prodyna.voting.datagenerator.sampledata.TestUser;
+import com.prodyna.voting.sampledata.TestUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;

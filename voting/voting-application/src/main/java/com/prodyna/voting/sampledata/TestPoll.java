@@ -1,4 +1,4 @@
-package com.prodyna.voting.datagenerator.sampledata;
+package com.prodyna.voting.sampledata;
 
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollOption;

@@ -5,6 +5,7 @@ import com.prodyna.voting.auth.user.User;
 import com.prodyna.voting.common.Reject;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import java.io.IOException;
  * Checks prove that valid token is sent as part of the incoming request (header).
  */
 @Component
+@Log4j
 public class SecurityFilter extends GenericFilterBean {
 
     public static final String SECURED_API_PATH = "/api/*";

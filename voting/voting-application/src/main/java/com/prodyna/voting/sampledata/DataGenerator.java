@@ -1,28 +1,24 @@
-package com.prodyna.voting.datagenerator;
+package com.prodyna.voting.sampledata;
 
-import com.prodyna.voting.Application;
 import com.prodyna.voting.auth.user.UserService;
 import com.prodyna.voting.poll.Poll;
 import com.prodyna.voting.poll.PollOption;
 import com.prodyna.voting.poll.PollService;
-import com.prodyna.voting.datagenerator.sampledata.TestPoll;
-import com.prodyna.voting.datagenerator.sampledata.TestUser;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Meant to be used when testing UI manually.
- * Let these tests run with build, its safe, since the data is immediately deleted anyway.
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-public class TestUserGenerator {
+@Component
+public class DataGenerator {
+
+    @Value("${voting.dev.mode}")
+    @Getter
+    private String testMode;
 
     @Autowired
     private UserService userService;
@@ -30,8 +26,14 @@ public class TestUserGenerator {
     @Autowired
     private PollService pollService;
 
-    @Test
-    public void generateTestData() {
+    @PostConstruct
+    public void postInit() {
+        if (testMode != null && testMode.equalsIgnoreCase("true")) {
+            regenerateTestData();
+        }
+    }
+
+    public void regenerateTestData() {
         removeAllTestData();
 
         for (TestUser user : TestUser.ALL_USERS) {
@@ -43,13 +45,11 @@ public class TestUserGenerator {
         }
     }
 
-    @Test
     public void removeAllTestData() {
         userService.deleteAllUsers(TestUser.ADMIN_1.toUserObject());
         pollService.deleteAllPolls(TestUser.ADMIN_1.toUserObject());
     }
 
-    @Test
     public void removeVotes() {
         List<Poll> allPolls = pollService.getAllPolls();
         for (Poll poll : allPolls) {
