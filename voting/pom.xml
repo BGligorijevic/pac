@@ -62,6 +62,12 @@
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.newrelic.agent.java</groupId>
+            <artifactId>newrelic-agent</artifactId>
+            <version>3.12.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
