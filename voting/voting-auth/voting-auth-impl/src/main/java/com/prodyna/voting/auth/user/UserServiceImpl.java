@@ -38,7 +38,10 @@ public class UserServiceImpl implements UserService {
         Reject.ifNull(userToLogin, "Invalid login data");
 
         Optional<User> dbUser = findUserByUserName(userToLogin.getUserName());
-        Reject.ifAbsent(dbUser, "No user with the specified userName exists. UserName=" + userToLogin.getUserName());
+        log.warn("No user with the specified userName exists. UserName=" + userToLogin.getUserName());
+        if (!dbUser.isPresent()) {
+            return Optional.empty();
+        }
 
         String hashedPass = hashPassword(userToLogin.getPassword());
 

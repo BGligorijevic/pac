@@ -2,6 +2,9 @@ package com.prodyna.voting.auth.user;
 
 import java.util.Optional;
 
+/**
+ * Component which works with the users in the system.
+ */
 public interface UserService {
 
     /**
@@ -14,10 +17,11 @@ public interface UserService {
     Optional<User> findUserByUserName(String userName);
 
     /**
-     * Tries to login the user with specified password, returning the appropriate result.
+     * Tries to login the user with the specified userName and password, returning the appropriate result.
      *
-     * @param userToLogin User with all information
      * @return user object if login succeeded, {@link Optional#empty()} if login failed.
+     * @throws IllegalArgumentException if provided data is incomplete (missing userToLogin) or
+     *                                  the user with the specified userName cannot be found in the database
      */
     Optional<User> login(User userToLogin);
 

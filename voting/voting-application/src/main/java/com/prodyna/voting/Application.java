@@ -18,10 +18,19 @@ public class Application {
     @Getter
     private String secretKey;
 
+    /**
+     * Application entry point.
+     * Just like in the good old days of University Java programming. :)
+     * See SpringBoot docs for more details.
+     */
     public static void main(final String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
+    /**
+     * Creates and associates the filter instance to intercept all incoming
+     * requests under {@link SecurityFilter#SECURED_API_PATH}.
+     */
     @Bean
     public FilterRegistrationBean securityFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
