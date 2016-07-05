@@ -1,1 +1,1 @@
-cd ..\..\..\pac-front-end && npm run clean && npm run build
+cd ..\..\..\pac-front-end && npm install && npm run clean && npm run build
