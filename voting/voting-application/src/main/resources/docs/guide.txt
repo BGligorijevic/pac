@@ -1,9 +1,9 @@
 Running the voting application:
 
 1. Make sure the vagrant is up. If not, run "vagrant up".
-2. cd to /scripts. Run appropriate script (bat or sh).
+2. cd to /scripts of this archive. Run appropriate script (bat or sh).
 This will start the Tomcat, load some testing data and enable remote debugger.
-3. Copy the contents of front-end folder to nginx/html folder.
+3. Install NGinx. Copy the contents of front-end folder to /usr/share/nginx/html folder on Unix or nginx installation folder/html on Windows.
 4. Start nginx web server.
-5. go to localhost, the application should show up.
-6. default users are admin/admin, test/test and test2/test2 (username/password).
+5. Go to localhost, the application should show up.
+6. Default users are admin/admin, test/test and test2/test2 (username/password).

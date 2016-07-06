@@ -19,6 +19,7 @@
             <outputDirectory>/back-end</outputDirectory>
             <includes>
                 <include>voting-application-1.0-SNAPSHOT.jar</include>
+                <include>newrelic.yml</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -32,7 +33,7 @@
             <directory>${project.basedir}/src/main/resources/docs/</directory>
             <outputDirectory>/docs</outputDirectory>
             <includes>
-                <include>guide.txt</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
     </fileSets>
