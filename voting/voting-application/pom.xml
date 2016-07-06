@@ -144,41 +144,22 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.3</version>
                 <executions>
                     <execution>
-                        <id>script-chmod-build</id>
                         <phase>install</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <executable>chmod</executable>
-                            <arguments>
-                                <argument>+x</argument>
-                                <argument>${project.basedir}/src/main/resources/scripts/build.sh</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <executions>
-                    <execution>
-                        <id>Run scripts</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${script.runner}</executable>
-                            <arguments>
-                                <argument>${project.basedir}/src/main/resources/scripts/build${script.extension}
-                                </argument>
-                            </arguments>
+                            <tasks>
+                                <exec
+                                        executable="${project.basedir}/src/main/resources/scripts/build${script.extension}"
+                                        failonerror="true">
+                                </exec>
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>
