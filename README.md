@@ -5,13 +5,22 @@ This project contains the back-end code related for PAC course.
 Pre-requisites:
 - Java JDK 8 (add to OS path)
 - Maven 3+ (add to OS path)
-- Optional (needed to run integration tests): cd to dev-infrastructure and run "vagrant up", this will provide the necessary mongdb instance for running the tests and using the dev environment.
+- Virtual box (5+)
+- Vagrant (1.8+, add to OS path)
 
-Building the project:
-- mvn clean package -- this builds the fat jar file and run unit tests.
-- mvn clean install -- this builds the the fat jar file, run unit tests and also run integration tests (you need "vagrant up" in order to run integration tests)
+Building the back-end project only:
+- mvn clean package -- this builds the fat jar file and runs all unit tests
+- mvn clean install -- this builds the the fat jar file, runs all unit tests, runs all integration tests (you need "vagrant up" in order to run integration tests) and packages both back-end and front-end applications as .zip archive
+
+Building the entire application - back-end and front-end projects as zip archive:
+- Install Node JS (4.4+)
+- clone pac-front-end project in the same directory level as pac-back-end project, so that the folders are siblings. Use folder name "pac-front-end".
+- cd to pac-back-end/dev-infrastructure and run "vagrant up". This can last a couple of minutes.
+- run "mvn clean install"
+- get some coffee
+- the "voting-application.zip" is created under voting-application/target
 
 Usage:
-cd into pac-back-end/voting/voting-application/target and run java -jar voting-application-1.0-SNAPSHOT.jar. This will boot the Tomcat instance on localhost:8080 containing all the back-end logic exposed as REST services.
+In "voting-application.zip" there is a folder "docs" short tutorial on how to run the application.
 
 This project is developed as part of PRODYNA Architecture Certification (PAC) course held by Darko Krizic, CTO of PRODYNA AG.
