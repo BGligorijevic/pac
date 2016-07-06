@@ -16,9 +16,9 @@ Building the entire application - back-end and front-end projects as zip archive
 - Install Node JS (4.4+)
 - clone pac-front-end project in the same directory level as pac-back-end project, so that the folders are siblings. Use folder name "pac-front-end".
 - cd to pac-back-end/dev-infrastructure and run "vagrant up". This can last a couple of minutes.
-- run "mvn clean install"
-- get some coffee
-- the "voting-application.zip" is created under voting-application/target
+- cd to pac-back-end/voting and run "mvn clean install".
+- get some coffee.
+- the "voting-application.zip" is created under pac-back-end/voting/voting-application/target.
 
 Usage:
 In "voting-application.zip" there is a folder "docs" short tutorial on how to run the application.

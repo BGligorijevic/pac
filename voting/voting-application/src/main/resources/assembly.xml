@@ -11,7 +11,7 @@
             <directory>${project.basedir}/../../../pac-front-end/build</directory>
             <outputDirectory>/front-end</outputDirectory>
             <includes>
-                <include>*</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
