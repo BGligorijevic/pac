@@ -46,8 +46,8 @@
                 </os>
             </activation>
             <properties>
-                <script.runner>cmd</script.runner>
-                <script.extension>.bat</script.extension>
+				<script.extension>.bat</script.extension>
+                <script.runner>${project.basedir}/src/main/resources/scripts/build${script.extension}</script.runner>
             </properties>
         </profile>
         <profile>
@@ -58,8 +58,8 @@
                 </os>
             </activation>
             <properties>
-                <script.runner>bash</script.runner>
-                <script.extension>.sh</script.extension>
+				<script.extension>.sh</script.extension>
+                <script.runner>/bin/bash</script.runner>
             </properties>
         </profile>
     </profiles>
@@ -155,9 +155,8 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <exec
-                                        executable="${project.basedir}/src/main/resources/scripts/build${script.extension}"
-                                        failonerror="true">
+                                <exec executable="${script.runner}" failonerror="true">
+									<arg value="${project.basedir}/src/main/resources/scripts/build${script.extension}"/>
                                 </exec>
                             </tasks>
                         </configuration>
