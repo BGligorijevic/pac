@@ -21,5 +21,19 @@
                 <include>voting-application-1.0-SNAPSHOT.jar</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/scripts/</directory>
+            <outputDirectory>/scripts</outputDirectory>
+            <includes>
+                <include>start.*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/docs/</directory>
+            <outputDirectory>/docs</outputDirectory>
+            <includes>
+                <include>guide.txt</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
