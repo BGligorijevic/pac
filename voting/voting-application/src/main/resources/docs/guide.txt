@@ -9,7 +9,7 @@ c) MongoDB is installed and configured properly according to the network and sys
 1. Copy the appropriate application.properties to "/back-end/config" folder.
 The default file will already be there, please override it with appropriate stage configuration (D/Q/P system dependent).
 2. cd to "/scripts" folder. Run appropriate script depending on the target OS (.bat for Windows or .sh for Unix-based OS).
-This script will start the Tomcat, load appropriate configuration and enable remote debugger. Make sure the ports 80 and 8080 are available.
+This script will start the Tomcat, load appropriate configuration and enable remote debugger.
 3. Copy the contents of "/front-end" folder to /usr/share/nginx/html (requires sudo) folder on Unix or {nginx installation folder}/html on Windows.
 4. Go to localhost, the application should show up under http://localhost.
 5. If "voting.dev.mode" is enabled, default users for the application are admin/admin, test/test and test2/test2 (username/password respectively).
