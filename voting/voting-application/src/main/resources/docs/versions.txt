@@ -1,4 +1,4 @@
-1.0:
+v1.0.0, 24.07.2016:
 - Initial version of the application. 
 - Poll can be created/removed/edited or voted on. 
 - There are normal users and admins. Admins can do more.
@@ -6,3 +6,4 @@
 - Vote can be placed only once.
 - Vote cannot be changed once voted.
 - REST API is available.
+- Monitoring of the application in production is available.

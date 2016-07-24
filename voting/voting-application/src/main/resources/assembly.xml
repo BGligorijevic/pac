@@ -23,6 +23,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${project.basedir}/src/main/resources/</directory>
+            <outputDirectory>/back-end/config</outputDirectory>
+            <includes>
+                <include>application.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/resources/scripts/</directory>
             <outputDirectory>/scripts</outputDirectory>
             <includes>
